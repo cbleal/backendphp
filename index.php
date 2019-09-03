@@ -25,14 +25,14 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                     </div>
-                    <input type="text" name="email" class="form-control" placeholder="Username">
+                    <input type="text" name="usuario" class="form-control" placeholder="Usuário">
                 </div>
 
                 <div class="input-group form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-key"></i></span>
                     </div>
-                    <input type="password" name="password" class="form-control" placeholder="Password">
+                    <input type="password" name="senha" class="form-control" placeholder="Senha">
                 </div>
 
                 <div class="form-group">

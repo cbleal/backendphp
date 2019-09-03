@@ -6,6 +6,6 @@ define('SENHA', 'wsbcbl');
 define('BD', 'systec');
 
 $conexao = mysqli_connect(HOST, USUARIO, SENHA, BD) 
-			or die('Não conectou!');
+			or die('Não conectou!');			
 
 ?>

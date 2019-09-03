@@ -2,11 +2,36 @@
 
 require 'conexao.php';
 
-if ( empty($_POST['email']) || empty($_POST['password']) ) {
+if ( empty($_POST['usuario']) || empty($_POST['senha']) ) {
+	header("Location: index.php");
+	exit;
+}
+
+$usuario = mysqli_real_escape_string($conexao, $_POST['usuario']);
+$senha   = mysqli_real_escape_string($conexao, $_POST['senha']);
+
+// sql que verifica se existe um usuario no banco com esses dados:
+$query = "SELECT * FROM usuarios 
+			WHERE usuario = '{$usuario}'
+			AND senha = '{$senha}'";
+// resultado da consulta:
+$result = mysqli_query($conexao, $query);
+// popula a variável row com as informações
+$row = mysqli_num_rows($result);
+// se tiver dados
+if ($row > 0) {
+	// adiciona os dados à variável
+	$dados = mysqli_fetch_array($result);
+	// adiciona na sessão
+	$_SESSION['nome_usuario']  = $dados['nome'];
+	$_SESSION['cargo_usuario'] = $dados['cargo'];
+	header("Location: painel_admin.php");
+	exit;
+} else { // do contrário...
+	$_SESSION['nao_autenticado'] = true;
 	header("Location: index.php");
 	exit;
 }
 
 ?>
 
-<h1>Logado com sucesso !!!</h1>
