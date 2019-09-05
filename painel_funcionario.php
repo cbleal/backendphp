@@ -49,10 +49,10 @@ require 'verificar_login.php';
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="active ">
-            <a href="./dashboard.html">
-              <i class="nc-icon nc-bank"></i>
-              <p>Dashboard</p>
+          <li class="">
+            <a href="clientes.php">
+              <i class="nc-icon nc-circle-10"></i>
+              <p>Clientes</p>
             </a>
           </li>
           <li>
@@ -121,15 +121,14 @@ require 'verificar_login.php';
              
               <li class="nav-item btn-rotate dropdown">
                 <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	<?php echo $_SESSION['nome_usuario']; ?>
                   <i class="nc-icon nc-bell-55"></i>
                   <p>
                     <span class="d-lg-none d-md-block">Some Actions</span>
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                  <a class="dropdown-item" href="logout.php">Sair</a>             
                 </div>
               </li>
              
