@@ -1,9 +1,13 @@
 <?php 
 
-session_start();
+// inicia a sessão
+session_start(); 
+// fecha a sessão
 session_destroy();
 
+// redireciona para página index
 header("Location: index.php");
+// encerra a operação
 exit;
 
 ?>

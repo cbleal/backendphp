@@ -1,23 +1,12 @@
 <?php 
 
-/* Função: Mostra o nome do usuário logado. */
+/* Mostra o nome do usuário logado. */
 
-// inclui o arquivo
 require 'verificar_login.php';
-
-// verificação de cargo logado
-if ( $_SESSION['cargo_usuario'] != 'Administrador' && 
-		 $_SESSION['cargo_usuario'] != 'Gerente' ) {
-		
-		// redireciona para a página
-		header("Location: index.php");
-		exit;		
-}
-
 
 ?>
 
-<h1>Painel do Administrador</h1>
+<h1>Painel do Funcionario</h1>
 <!-- recupera o parâmetro nome_usuario da sessão -->
 <h3><?php echo "Usuário: ".$_SESSION['nome_usuario']; ?></h3>
 <!-- recupera o parâmetro cargo_usuario da sessão -->
