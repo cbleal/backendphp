@@ -110,26 +110,30 @@ require 'conexao.php';
 
                         $query  = "SELECT * FROM clientes ORDER BY nome ASC";
                         $result = mysqli_query($conexao, $query);
-                        $row    = mysqli_num_rows($result);
 
-                        if ($row > 0) {
-                          while ($cliente = mysqli_fetch_assoc($result)) {
-                            //echo '<tbody>';
-                            echo '<tr>';
-                            echo '<td>'.$cliente['nome'].'</td>';
-                            echo '<td>'.$cliente['telefone'].'</td>';
-                            echo '<td>'.$cliente['endereco'].'</td>';
-                            echo '<td>'.$cliente['email'].'</td>';
-                            echo '<td>'.$cliente['cpf'].'</td>';
-                            echo '<td>'.implode('/', array_reverse(explode('-', $cliente['data']))).'</td>';
-                            //echo '<td>'.'Ações'.'</td>';
-                            echo '<td><a class="btn btn-info" href="alteradb.php?id='.$cliente['id'].'"><i class="fa fa-pencil-square-o"></i></a>';
-                            echo ' <a class="btn btn-danger" href="removedb.php?id='.$cliente['id'].'"><i class="fa fa-minus-square"></i></a>';
-                            echo '</td>';
-                            echo '</tr>';
-                            //echo '</tbody>';
-                          }                          
-                        }
+                        while ($row = mysqli_fetch_assoc($result)) {
+                          
+                        ?>
+
+                          <tr>
+                            <td><?php echo $row['nome']; ?></td>
+                            <td><?php echo $row['telefone']; ?></td>
+                            <td><?php echo $row['endereco']; ?></td>
+                            <td><?php echo $row['email']; ?></td>
+                            <td><?php echo $row['cpf']; ?></td>
+                            <td><?php echo date('d/m/Y', strtotime($row['data'])); ?></td> 
+                            <td>
+                              <a class="btn btn-info" href="clientes.php?func=edita&id=<?php echo $row['id'] ?>">
+                                <i class="fa fa-pencil-square-o"></i>
+                              </a>
+                           
+                              <a class="btn btn-danger" href="clientes.php?func=deleta&id=<?php echo $row['id'] ?>">
+                                <i class="fa fa-minus-square"></i>
+                              </a>
+                            </td>
+                         
+
+                          <?php } 
 
                       ?>
 
@@ -213,7 +217,7 @@ if (isset($_POST['btSalvar'])) {
 
 	 $result = mysqli_query($conexao, $query);
 	
-	 if ($result != '') {
+	 if ($result) {
 	 	echo "<script type='text/javascript'>window.alert('Cliente cadastrado com sucesso.')</script>";
 	 } else {
 	 	echo "<script type='text/javascript'>window.alert('Erro ao cadastrar o Cliente.')</script>";
@@ -221,6 +225,18 @@ if (isset($_POST['btSalvar'])) {
 }
 
 ?>
+
+<!-- Exclusao -->
+<?php 
+if (@$_GET['func'] == 'deleta') {
+  $id = $_GET['id'];
+  $query = "DELETE FROM clientes WHERE id = $id";
+  mysqli_query($conexao, $query);  
+  echo "<script type='text/javascript'>window.location='clientes.php'</script>";
+  
+}
+?>
+
 
 <!-- Máscaras -->
 <script type="text/javascript">

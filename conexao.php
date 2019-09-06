@@ -3,7 +3,7 @@
 //definição de variáveis globais com informações para conexão com o banco
 define('HOST', 'localhost');
 define('USUARIO', 'root');
-define('SENHA', 'wsbcbl');
+define('SENHA', '');
 define('BD', 'systec');
 
 //variável de conexão MySQL
