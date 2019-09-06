@@ -96,9 +96,42 @@ require 'conexao.php';
                       <th>
                         CPF
                       </th>
+                      <th>
+                        Data
+                      </th>
+                      <th>
+                        Ações
+                      </th>
                     </thead>
                         
                     <tbody>
+
+                      <?php 
+
+                        $query  = "SELECT * FROM clientes ORDER BY nome ASC";
+                        $result = mysqli_query($conexao, $query);
+                        $row    = mysqli_num_rows($result);
+
+                        if ($row > 0) {
+                          while ($cliente = mysqli_fetch_assoc($result)) {
+                            //echo '<tbody>';
+                            echo '<tr>';
+                            echo '<td>'.$cliente['nome'].'</td>';
+                            echo '<td>'.$cliente['telefone'].'</td>';
+                            echo '<td>'.$cliente['endereco'].'</td>';
+                            echo '<td>'.$cliente['email'].'</td>';
+                            echo '<td>'.$cliente['cpf'].'</td>';
+                            echo '<td>'.implode('/', array_reverse(explode('-', $cliente['data']))).'</td>';
+                            //echo '<td>'.'Ações'.'</td>';
+                            echo '<td><a class="btn btn-info" href="alteradb.php?id='.$cliente['id'].'"><i class="fa fa-pencil-square-o"></i></a>';
+                            echo ' <a class="btn btn-danger" href="removedb.php?id='.$cliente['id'].'"><i class="fa fa-minus-square"></i></a>';
+                            echo '</td>';
+                            echo '</tr>';
+                            //echo '</tbody>';
+                          }                          
+                        }
+
+                      ?>
 
                     </tbody>
                   </table>                  
