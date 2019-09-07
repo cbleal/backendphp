@@ -28,7 +28,7 @@ require 'conexao.php';
   <!-- Nav -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
 
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="painel_funcionario.php">
       <big><big><i class="fa fa-arrow-left"></i></big></big>
     </a>
 
@@ -41,8 +41,8 @@ require 'conexao.php';
       
       </ul>
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fa fa-search"></i></button>
+        <input class="form-control mr-sm-2" type="search" name="txtPesquisar" placeholder="Pesquisar" aria-label="Pesquisar">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="btPesquisar"><i class="fa fa-search"></i></button>
       </form>
     </div>
 
@@ -108,9 +108,16 @@ require 'conexao.php';
                         
                     <tbody>
 
-                      <?php 
+                      <?php
 
-                        $query  = "SELECT * FROM clientes ORDER BY nome ASC";
+                        if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' ) {
+                          $nome = $_GET['txtPesquisar'].'%';
+                          $query = "SELECT * FROM clientes WHERE nome LIKE '{$nome}' ORDER BY nome ASC";
+                          
+                        } else {
+                           $query  = "SELECT * FROM clientes ORDER BY nome ASC";
+                        } 
+                       
                         $result = mysqli_query($conexao, $query);
 
                         while ($row = mysqli_fetch_assoc($result)) {
