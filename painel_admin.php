@@ -67,7 +67,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
             </a>
           </li>
           <li>
-            <a href="usuarios.html">
+            <a href="usuarios.php">
               <i class="nc-icon nc-single-02"></i>
               <p>Usuarios</p>
             </a>

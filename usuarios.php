@@ -9,7 +9,7 @@ require 'conexao.php';
 
 <head>
   <!-- Titulo -->
-  <title>Funcionarios</title>
+  <title>Usuarios</title>
   <!-- Meta -->
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
  
@@ -74,7 +74,7 @@ require 'conexao.php';
             <!-- Div Card -->
             <div class="card">              
               <div class="card-header">
-                <h4 class="card-title"> Tabela de Funcionarios</h4>
+                <h4 class="card-title"> Tabela de Usuarios</h4>
               </div>
               <!-- Div Body -->
               <div class="card-body">
@@ -87,21 +87,19 @@ require 'conexao.php';
                         Nome
                       </th>
                       <th>
-                        CPF
-                      </th>
+                        Usuario
+                      </th> 
+                      <!-- 
                       <th>
-                        Telefone
-                      </th>
-                      <th>
-                        Endereco
-                      </th>
+                        Senha
+                      </th> -->                      
                       <th>
                         Cargo
                       </th>
                       <th>
-                        Data
+                        Telefone
                       </th>
-                      <th>
+                      <th>                  
                         Ações
                       </th>
                     </thead>
@@ -112,10 +110,12 @@ require 'conexao.php';
 
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' ) {
                           $nome = $_GET['txtPesquisar'].'%';
-                          $query = "SELECT * FROM funcionarios WHERE nome LIKE '{$nome}' ORDER BY nome ASC";
+
+                          $query = "SELECT u.id, f.nome, u.usuario, u.senha, u.cargo, u.id_funcionario, f.telefone from usuarios as u INNER JOIN funcionarios as f ON u.id_funcionario = f.id where f.nome LIKE '$nome'  order by f.nome asc"; 
                           
                         } else {
-                           $query  = "SELECT * FROM funcionarios ORDER BY nome ASC";
+                           $query = "SELECT u.id, f.nome, u.usuario, u.senha, u.cargo, u.id_funcionario, f.telefone from usuarios as u INNER JOIN funcionarios as f ON u.id_funcionario = f.id order by f.nome asc"; 
+                           
                         } 
                        
                         $result = mysqli_query($conexao, $query);
@@ -126,17 +126,16 @@ require 'conexao.php';
 
                           <tr>
                             <td><?php echo $row['nome']; ?></td>
-                            <td><?php echo $row['cpf']; ?></td>
-                            <td><?php echo $row['telefone']; ?></td>
-                            <td><?php echo $row['endereco']; ?></td>
+                            <td><?php echo $row['usuario']; ?></td>
+                            <!--<td><?php echo $row['senha']; ?></td>-->
                             <td><?php echo $row['cargo']; ?></td>
-                            <td><?php echo date('d/m/Y', strtotime($row['data'])); ?></td> 
+                            <td><?php echo $row['telefone']; ?></td>
                             <td>
-                              <a class="btn btn-info" href="funcionarios.php?func=edita&id=<?php echo $row['id'] ?>">
+                              <a class="btn btn-info" href="usuarios.php?func=edita&id=<?php echo $row['id'] ?>">
                                 <i class="fas fa-pen-square"></i>
                               </a>
                            
-                              <a class="btn btn-danger" href="funcionarios.php?func=deleta&id=<?php echo $row['id'] ?>">
+                              <a class="btn btn-danger" href="usuarios.php?func=deleta&id=<?php echo $row['id'] ?>">
                                 <i class="fas fa-trash-alt"></i>
                               </a>
                             </td>
@@ -173,7 +172,7 @@ require 'conexao.php';
 
               <!-- Modal Header-->
               <div class="modal-header">              
-                <h4 class="modal-title">Funcionarios</h4>
+                <h4 class="modal-title">Usuarios</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
               <!-- Fim Modal Header -->
@@ -182,36 +181,26 @@ require 'conexao.php';
               <div class="modal-body">
 
                 <div class="form-group">
-                  <label for="id_produto">Nome</label>
-                  <input type="text" class="form-control mr-2" name="txtnome" id="txtnome" placeholder="Nome" required>
+                  <label for="id_produto">Usuario</label>
+                  <input type="text" class="form-control mr-2" name="txtusuario" id="txtusuario" placeholder="Usuario" required>
                 </div>
 
                 <div class="form-group">
-                  <label for="fornecedor">CPF</label>
-                   <input type="text" class="form-control mr-2" name="txtcpf" id="txtcpf" placeholder="CPF" required>
+                  <label for="fornecedor">Senha</label>
+                   <input type="password" class="form-control mr-2" name="txtsenha" id="txtsenha" placeholder="Senha" required>
                 </div>
 
                 <div class="form-group">
-                  <label for="id_produto">Telefone</label>
-                  <input type="text" class="form-control mr-2" name="txttelefone" id="txttelefone" placeholder="Telefone" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="quantidade">Endereco</label>
-                  <input type="text" class="form-control mr-2" name="txtendereco" id="txtendereco" placeholder="Endereço" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="fornecedor">Cargo</label>
-                  <select class="form-control mr-2" name="cargo" id="cargo">
+                  <label for="fornecedor">Funcionario</label>
+                  <select class="form-control mr-2" name="id_funcionario" id="id_funcionario">
                     <?php
-                    $query  = "SELECT * FROM cargos";
+                    $query  = "SELECT * FROM funcionarios";
                     $result = mysqli_query($conexao, $query);
                     if ($result) {
                       while ($row = mysqli_fetch_assoc($result)) {
                         ?>
-                        <option value="<?php echo $row['cargo'] ?>">
-                          <?php echo $row['cargo'] ?>
+                        <option value="<?php echo $row['id']; ?>">
+                          <?php echo $row['nome']; ?>
                         </option>
 
                       <?php
@@ -223,14 +212,17 @@ require 'conexao.php';
                 </div>
 
               </div>
-              <!-- Modal Body-->
+              <!-- Fim Modal Body-->
                      
+              <!-- Modal Footer -->
               <div class="modal-footer">
                  <button type="submit" class="btn btn-success mb-3" name="btSalvar">Salvar </button>
 
                   <button type="button" class="btn btn-danger mb-3" data-dismiss="modal">Cancelar </button>
 
               </div>
+              <!-- Fim Modal Footer -->
+
             </div>
             <!-- Fim Modal Content-->
           </div>
@@ -258,38 +250,43 @@ require 'conexao.php';
 <?php  
 
 if (isset($_POST['btSalvar'])) {
-  $dados = $_POST;	
+  //$dados = $_POST;
+  $usuario = $_POST['txtusuario'];
+  $senha   = $_POST['txtsenha'];
+  $id_funcionario = $_POST['id_funcionario'];
+  
+  $query  = "SELECT * FROM funcionarios WHERE id = '{$id_funcionario}' ";
+  $result = mysqli_query($conexao, $query);
+  $dados  = mysqli_fetch_assoc($result);
+  $row    = mysqli_num_rows($result);
+  if ($row > 0) {
+     $nome  = $dados['nome'];
+     $cargo = $dados['cargo']; 
+   } 
 
-	// Verificar se o CPF já é cadastrado
-	$query  = "SELECT * FROM funcionarios WHERE cpf = '{$dados['txtcpf']}' ";
+	// Verificar se o Usuario já é cadastrado
+	$query  = "SELECT * FROM usuarios WHERE usuario = '{$usuario}' ";
 	$result = mysqli_query($conexao, $query);
 	$row    = mysqli_num_rows($result);
 
 	if ($row > 0) { // se encontrar, a operação é cancelada
-	 	echo "<script type='text/javascript'>window.alert('CPF já cadastrado')</script>";
+	 	echo "<script type='text/javascript'>window.alert('Usuario já cadastrado')</script>";
 	 	exit;
 	 }
 
 	 // Inserir no banco	
-   $query  = "INSERT INTO funcionarios (nome, cpf, telefone, endereco, cargo, data) 
-              VALUES (
-                      '{$dados['txtnome']}', 
-                      '{$dados['txtcpf']}', 
-                      '{$dados['txttelefone']}', 
-                      '{$dados['txtendereco']}', 
-                      '{$dados['cargo']}', 
-                      now() 
-                    )";
-
+   $query  = "INSERT INTO usuarios (nome, usuario, senha, cargo, id_funcionario) 
+              VALUES ('$nome', '$usuario', '$senha', '$cargo', '$id_funcionario')";
+                      
 	 $result = mysqli_query($conexao, $query);
 	
 	 if ($result) {
-	 	echo "<script type='text/javascript'>window.alert('Funcionario cadastrado com sucesso.')</script>";
-    echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+	 	echo "<script type='text/javascript'>window.alert('Usuario cadastrado com sucesso.')</script>";
+    echo "<script type='text/javascript'>window.location='usuarios.php'</script>";
 
 	 } else {
-	 	echo "<script type='text/javascript'>window.alert('Erro ao cadastrar o Funcionario.')</script>";
-    echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+	 	echo "<script type='text/javascript'>window.alert('Erro ao cadastrar o Usuario.')</script>";
+    echo "<script type='text/javascript'>window.location='usuarios.php'</script>";
 	 }
 }
 
@@ -299,9 +296,9 @@ if (isset($_POST['btSalvar'])) {
 <?php 
 if (@$_GET['func'] == 'deleta') {
   $id = $_GET['id'];
-  $query = "DELETE FROM funcionarios WHERE id = $id";
+  $query = "DELETE FROM usuarios WHERE id = $id";
   mysqli_query($conexao, $query);  
-  echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+  echo "<script type='text/javascript'>window.location='usuarios.php'</script>";
   
 }
 ?>
@@ -309,13 +306,14 @@ if (@$_GET['func'] == 'deleta') {
 <!-- Alteração -->
 <?php 
 if (@$_GET['func'] == 'edita') {
+  // pega o id passado pelo link
   $id = $_GET['id'];
 
-  $query  = "SELECT * FROM funcionarios WHERE id = '$id'";
+  // consulta ao banco usuarios
+  $query  = "SELECT * FROM usuarios WHERE id = '{$id}'";
   $result = mysqli_query($conexao, $query);
 
-
-  while ($row = mysqli_fetch_array($result)) {
+  while ($row = mysqli_fetch_assoc($result)) {
 
   ?>
 
@@ -330,7 +328,7 @@ if (@$_GET['func'] == 'edita') {
 
               <!-- Modal Header-->
               <div class="modal-header">              
-                <h4 class="modal-title">Funcionarios</h4>
+                <h4 class="modal-title">Usuarios</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
               <!-- Fim Modal Header -->
@@ -339,43 +337,14 @@ if (@$_GET['func'] == 'edita') {
               <div class="modal-body">
 
                 <div class="form-group">
-                  <label for="id_produto">Nome</label>
-                  <input type="text" class="form-control mr-2" name="txtnome" id="txtnome" value="<?php echo $row['nome'] ?>" placeholder="Nome" required>
+                  <label for="id_produto">Usuario</label>
+                  <input type="text" class="form-control mr-2" name="txtusuario" id="txtusuario" value="<?php echo $row['usuario'] ?>" placeholder="Usuario" required>
                 </div>
 
                 <div class="form-group">
-                  <label for="fornecedor">CPF</label>
-                   <input type="text" class="form-control mr-2" name="txtcpf" id="txtcpf" value="<?php echo $row['cpf'] ?>" placeholder="CPF" required>
+                  <label for="fornecedor">Senha</label>
+                   <input type="text" class="form-control mr-2" name="txtsenha" id="txtsenha" value="<?php echo $row['senha'] ?>" placeholder="Senha" required>
                 </div>
-
-                <div class="form-group">
-                  <label for="id_produto">Telefone</label>
-                  <input type="text" class="form-control mr-2" name="txttelefone" id="txttelefone" value="<?php echo $row['telefone'] ?>" placeholder="Telefone" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="quantidade">Endereço</label>
-                  <input type="text" class="form-control mr-2" name="txtendereco" id="txtendereco" value="<?php echo $row['endereco'] ?>" placeholder="Endereço" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="fornecedor">Cargo</label>
-                  <select class="form-control mr-2" name="cargo" id="cargo">
-                    <?php
-                    $query  = "SELECT * FROM cargos";
-                    $result = mysqli_query($conexao, $query);
-                    if ($result) {
-                      while ($row_cargo = mysqli_fetch_assoc($result)) {
-                        // selecionar o cargo respectivo para deixar ativo
-                        $check = ($row['cargo'] == $row_cargo['cargo']) ? 'selected=1' : '';
-                        // lista no combobox
-                        echo "<option $check value='{$row_cargo['cargo']}'>{$row_cargo['cargo']}</option>";
-
-                      }
-                    }
-                    ?>
-                  </select>
-                </div>               
 
               </div>
               <!-- Modal Body-->
@@ -413,37 +382,36 @@ $(document).ready(function(){
 <?php 
 
 if (isset($_POST['btEditar'])) {
-  $dados = $_POST;
+  //$dados = $_POST;
+  $usuario = $_POST['txtusuario'];
+  $senha   = $_POST['txtsenha'];
 
-  // se o cpf recuperado do banco for diferente do cpf digitado no campo:
-  if ($row['cpf'] != $dados['txtcpf']) {
-    // VERIFICACAO CPF CADASTRADO
-    $query  = "SELECT * FROM funcionarios WHERE cpf = '{$dados['txtcpf']}'";
+  if ($row['usuario'] != $usuario) {       
+
+    $query  = "SELECT * FROM usuarios WHERE usuario = '{$usuario}' ";
     $result = mysqli_query($conexao, $query);
     $row    = mysqli_num_rows($result);
-    if ($row > 0) {
-       echo "<script type='text/javascript'>window.alert('CPF já cadastrado.')</script>";
-       exit;
-     }
+
+    if($row > 0){
+      echo "<script language='javascript'> window.alert('Usuário já Cadastrado!'); </script>";
+      exit();
+    }
   }
-  
-  $query = "UPDATE funcionarios
-            SET nome     = '{$dados['txtnome']}',
-                cpf      = '{$dados['txtcpf']}',
-                telefone = '{$dados['txttelefone']}',
-                endereco = '{$dados['txtendereco']}',
-                cargo    = '{$dados['cargo']}'
-                
-            WHERE id = '{$id}'";
+
+  // atualizar os dados no banco
+  $query = "UPDATE usuarios
+            SET    usuario  = '{$usuario}',
+                   senha    = '{$senha}'  
+            WHERE  id       = '{$id}' ";
 
   $result = mysqli_query($conexao, $query);
 
   if ($result) {
-    echo "<script type='text/javascript'>window.alert('Cliente alterado com sucesso.')</script>";
-    echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+    echo "<script type='text/javascript'>window.alert('Usuario alterado com sucesso.')</script>";
+    echo "<script type='text/javascript'>window.location='usuarios.php'</script>";
   } else {
     echo "<script type='text/javascript'>window.alert('Erro ao alterar registro.')</script>";
-    echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+    echo "<script type='text/javascript'>window.location='usuarios.php'</script>";
   }
   
 }
@@ -451,12 +419,3 @@ if (isset($_POST['btEditar'])) {
 ?>
 
 <?php } } ?> 
-
-
-<!-- Máscaras -->
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('#txttelefone').mask('(00) 00000-0000');
-		$('#txtcpf').mask('000.000.000-00');
-	});
-</script>
