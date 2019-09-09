@@ -11,6 +11,7 @@ require 'conexao.php';
   <!-- Titulo -->
   <title>Clientes</title>
   <!-- Meta -->
+  <meta charset="utf-8">
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
  
   <!-- Font Awesome -->
@@ -40,8 +41,14 @@ require 'conexao.php';
       <ul class="navbar-nav mr-auto">
       
       </ul>
+      <!-- Form Pesquisar CPF -->
+      <form class="form-inline my-2 my-lg-0 mr-4">
+        <input class="form-control mr-sm-2" type="search" name="txtPesquisarCPF" id="txtcpf" placeholder="Buscar pelo CPF" aria-label="Pesquisar">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="btPesquisarCPF"><i class="fa fa-search"></i></button>
+      </form>
+      <!-- Form Pesquisar Nome -->
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" name="txtPesquisar" placeholder="Pesquisar" aria-label="Pesquisar">
+        <input class="form-control mr-sm-2" type="search" name="txtPesquisar" placeholder="Buscar pelo nome" aria-label="Pesquisar">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="btPesquisar"><i class="fa fa-search"></i></button>
       </form>
     </div>
@@ -113,7 +120,9 @@ require 'conexao.php';
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' ) {
                           $nome = $_GET['txtPesquisar'].'%';
                           $query = "SELECT * FROM clientes WHERE nome LIKE '{$nome}' ORDER BY nome ASC";
-                          
+                        } elseif ( isset($_GET['btPesquisarCPF']) && $_GET['txtPesquisarCPF'] != '' ) {
+                          $cpf = $_GET['txtPesquisarCPF'];
+                          $query = "SELECT * FROM clientes WHERE cpf = '{$cpf}'";
                         } else {
                            $query  = "SELECT * FROM clientes ORDER BY nome ASC";
                         } 

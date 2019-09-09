@@ -157,7 +157,7 @@ require 'conexao.php';
 
               <!-- Modal Header-->
               <div class="modal-header">              
-                <h4 class="modal-title">Clientes</h4>
+                <h4 class="modal-title">Cargos</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
               <!-- Fim Modal Header -->
