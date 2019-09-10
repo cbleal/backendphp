@@ -7,7 +7,7 @@ require 'verificar_login.php';
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="br">
 
 <head>
   <meta charset="utf-8" />
@@ -56,9 +56,9 @@ require 'verificar_login.php';
             </a>
           </li>
           <li>
-            <a href="./icons.html">
+            <a href="abrir_orcamentos.php">
               <i class="nc-icon nc-diamond"></i>
-              <p>Icons</p>
+              <p>Orçamentos</p>
             </a>
           </li>
           <li>
