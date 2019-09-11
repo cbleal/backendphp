@@ -304,7 +304,7 @@ if (@$_GET['func'] == 'edita') {
   $result = mysqli_query($conexao, $query);
 
 
-  while ($row = mysqli_fetch_array($result)) {
+  while ($row = mysqli_fetch_assoc($result)) {
 
   ?>
 

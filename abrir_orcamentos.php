@@ -302,9 +302,9 @@ if (isset($_POST['btSalvar'])) {
 <?php 
 if (@$_GET['func'] == 'deleta') {
   $id = $_GET['id'];
-  $query = "DELETE FROM funcionarios WHERE id = $id";
+  $query = "DELETE FROM orcamentos WHERE id = '{$id}'";
   mysqli_query($conexao, $query);  
-  echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+  echo "<script type='text/javascript'>window.location='abrir_orcamentos.php'</script>";
   
 }
 ?>
@@ -314,11 +314,11 @@ if (@$_GET['func'] == 'deleta') {
 if (@$_GET['func'] == 'edita') {
   $id = $_GET['id'];
 
-  $query  = "SELECT * FROM funcionarios WHERE id = '$id'";
+  $query  = "SELECT * FROM orcamentos WHERE id = '$id' ";
   $result = mysqli_query($conexao, $query);
 
 
-  while ($row = mysqli_fetch_array($result)) {
+  while ($row = mysqli_fetch_assoc($result)) {
 
   ?>
 
@@ -333,7 +333,7 @@ if (@$_GET['func'] == 'edita') {
 
               <!-- Modal Header-->
               <div class="modal-header">              
-                <h4 class="modal-title">Funcionarios</h4>
+                <h4 class="modal-title">Orçamentos</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
               <!-- Fim Modal Header -->
@@ -342,43 +342,44 @@ if (@$_GET['func'] == 'edita') {
               <div class="modal-body">
 
                 <div class="form-group">
-                  <label for="id_produto">Nome</label>
-                  <input type="text" class="form-control mr-2" name="txtnome" id="txtnome" value="<?php echo $row['nome'] ?>" placeholder="Nome" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="fornecedor">CPF</label>
-                   <input type="text" class="form-control mr-2" name="txtcpf" id="txtcpf" value="<?php echo $row['cpf'] ?>" placeholder="CPF" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="id_produto">Telefone</label>
-                  <input type="text" class="form-control mr-2" name="txttelefone" id="txttelefone" value="<?php echo $row['telefone'] ?>" placeholder="Telefone" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="quantidade">Endereço</label>
-                  <input type="text" class="form-control mr-2" name="txtendereco" id="txtendereco" value="<?php echo $row['endereco'] ?>" placeholder="Endereço" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="fornecedor">Cargo</label>
-                  <select class="form-control mr-2" name="cargo" id="cargo">
+                  <label for="fornecedor">Técnico</label>
+                  <select class="form-control mr-2" name="tecnico" id="cargo">
                     <?php
-                    $query  = "SELECT * FROM cargos";
+                    $query  = "SELECT * FROM funcionarios WHERE cargo = 'Tecnico'";
                     $result = mysqli_query($conexao, $query);
                     if ($result) {
-                      while ($row_cargo = mysqli_fetch_assoc($result)) {
-                        // selecionar o cargo respectivo para deixar ativo
-                        $check = ($row['cargo'] == $row_cargo['cargo']) ? 'selected=1' : '';
-                        // lista no combobox
-                        echo "<option $check value='{$row_cargo['cargo']}'>{$row_cargo['cargo']}</option>";
+                      while ($rowt = mysqli_fetch_assoc($result)) {
+                        ?>
+                        <option value="<?php echo $rowt['id'] ?>">
+                          <?php echo $rowt['nome'] ?>
+                        </option>
 
+                      <?php
                       }
                     }
                     ?>
-                  </select>
-                </div>               
+                  </select>                  
+                </div>
+
+                <div class="form-group">
+                  <label for="id_produto">Produto</label>
+                  <input type="text" class="form-control mr-2" name="txtproduto" id="txtnumserie" value="<?php echo $row['produto'] ?>" placeholder="Produto" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="id_produto">Nº Série</label>
+                  <input type="text" class="form-control mr-2" name="txtnumserie" id="txtnumserie" value="<?php echo $row['serie'] ?>" placeholder="Nº Série" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="quantidade">Defeito</label>
+                  <input type="text" class="form-control mr-2" name="txtdefeito" id="txtdefeito" value="<?php echo $row['problema'] ?>" placeholder="Defeito" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="quantidade">Observações</label>
+                  <input type="text" class="form-control mr-2" name="txtobs" id="txtobs" value="<?php echo $row['observacoes'] ?>" placeholder="Observações" required>
+                </div>
 
               </div>
               <!-- Modal Body-->
@@ -401,8 +402,6 @@ if (@$_GET['func'] == 'edita') {
     </div>
     <!-- Fim Modal -->
 
-
-
 <!-- Abre Janela Modal -->
 <script type="text/javascript">
 $(document).ready(function(){
@@ -417,36 +416,24 @@ $(document).ready(function(){
 
 if (isset($_POST['btEditar'])) {
   $dados = $_POST;
-
-  // se o cpf recuperado do banco for diferente do cpf digitado no campo:
-  if ($row['cpf'] != $dados['txtcpf']) {
-    // VERIFICACAO CPF CADASTRADO
-    $query  = "SELECT * FROM funcionarios WHERE cpf = '{$dados['txtcpf']}'";
-    $result = mysqli_query($conexao, $query);
-    $row    = mysqli_num_rows($result);
-    if ($row > 0) {
-       echo "<script type='text/javascript'>window.alert('CPF já cadastrado.')</script>";
-       exit;
-     }
-  }
   
-  $query = "UPDATE funcionarios
-            SET nome     = '{$dados['txtnome']}',
-                cpf      = '{$dados['txtcpf']}',
-                telefone = '{$dados['txttelefone']}',
-                endereco = '{$dados['txtendereco']}',
-                cargo    = '{$dados['cargo']}'
+  $query = "UPDATE orcamentos
+            SET tecnico     = '{$dados['tecnico']}',
+                produto     = '{$dados['txtproduto']}',
+                serie       = '{$dados['txtnumserie']}',
+                problema    = '{$dados['txtdefeito']}',
+                observacoes = '{$dados['txtobs']}'
                 
             WHERE id = '{$id}'";
 
   $result = mysqli_query($conexao, $query);
 
   if ($result) {
-    echo "<script type='text/javascript'>window.alert('Cliente alterado com sucesso.')</script>";
-    echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+    echo "<script type='text/javascript'>window.alert('Orçamento alterado com sucesso.')</script>";
+    echo "<script type='text/javascript'>window.location='abrir_orcamentos.php'</script>";
   } else {
     echo "<script type='text/javascript'>window.alert('Erro ao alterar registro.')</script>";
-    echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+    echo "<script type='text/javascript'>window.location='abrir_orcamentos.php'</script>";
   }
   
 }
