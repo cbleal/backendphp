@@ -110,10 +110,10 @@ require 'conexao.php';
 
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' ) {
                           $data = $_GET['txtPesquisar'].'%';
-                          $query = "SELECT * FROM orcamentos WHERE data_abertura = $data ORDER BY id ASC";
+                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_func FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE data_abertura = $data ORDER BY id ASC";
                           
                         } else {
-                           $query  = "SELECT * FROM orcamentos WHERE  data_abertura = now() ORDER BY id ASC";
+                           $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico WHERE data_abertura = curDate() ORDER BY id ASC";
                         } 
                        
                         $result = mysqli_query($conexao, $query);
@@ -123,8 +123,8 @@ require 'conexao.php';
                         ?>
 
                           <tr>
-                            <td><?php echo $row['cliente']; ?></td>
-                            <td><?php echo $row['tecnico']; ?></td>
+                            <td><?php echo $row['nome_cli']; ?></td>
+                            <td><?php echo $row['nome_tec']; ?></td>
                             <td><?php echo $row['produto']; ?></td>
                             <td><?php echo $row['valor_total']; ?></td>
                             <td><?php echo $row['status']; ?></td>         
@@ -204,6 +204,11 @@ require 'conexao.php';
                 </div>
 
                 <div class="form-group">
+                  <label for="id_produto">Produto</label>
+                  <input type="text" class="form-control mr-2" name="txtproduto" id="txtnumserie" placeholder="Produto" required>
+                </div>
+
+                <div class="form-group">
                   <label for="id_produto">Nº Série</label>
                   <input type="text" class="form-control mr-2" name="txtnumserie" id="txtnumserie" placeholder="Nº Série" required>
                 </div>
@@ -256,36 +261,38 @@ require 'conexao.php';
 if (isset($_POST['btSalvar'])) {
   $dados = $_POST;	
 
-	// Verificar se o CPF já é cadastrado
-	$query  = "SELECT * FROM funcionarios WHERE cpf = '{$dados['txtcpf']}' ";
-	$result = mysqli_query($conexao, $query);
-	$row    = mysqli_num_rows($result);
-
-	if ($row > 0) { // se encontrar, a operação é cancelada
-	 	echo "<script type='text/javascript'>window.alert('CPF já cadastrado')</script>";
-	 	exit;
-	 }
+  // VERIFICAR SE O CPF ESTÁ CADASTRADO
+  $query  = "SELECT * FROM clientes WHERE cpf = '{$dados['txtcpf']}'";
+  $result = mysqli_query($conexao, $query);
+  $row    = mysqli_num_rows($result);
+  if ($row <= 0) {
+     echo "<script type='text/javascript'>window.alert('Cliente não cadastrado.')</script>";
+     exit();
+   } 
 
 	 // Inserir no banco	
-   $query  = "INSERT INTO funcionarios (nome, cpf, telefone, endereco, cargo, data) 
+   $query  = "INSERT INTO orcamentos (cliente, tecnico, produto, serie, problema, observacoes, valor_total, data_abertura, status) 
               VALUES (
-                      '{$dados['txtnome']}', 
                       '{$dados['txtcpf']}', 
-                      '{$dados['txttelefone']}', 
-                      '{$dados['txtendereco']}', 
-                      '{$dados['cargo']}', 
-                      now() 
+                      '{$dados['tecnico']}', 
+                      '{$dados['txtproduto']}',
+                      '{$dados['txtnumserie']}', 
+                      '{$dados['txtdefeito']}', 
+                      '{$dados['txtobs']}',
+                      '0',                      
+                      now(),
+                      'Aberto' 
                     )";
 
 	 $result = mysqli_query($conexao, $query);
 	
 	 if ($result) {
-	 	echo "<script type='text/javascript'>window.alert('Funcionario cadastrado com sucesso.')</script>";
-    echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+	 	echo "<script type='text/javascript'>window.alert('Orçamento cadastrado com sucesso.')</script>";
+    echo "<script type='text/javascript'>window.location='abrir_orcamentos.php'</script>";
 
 	 } else {
 	 	echo "<script type='text/javascript'>window.alert('Erro ao cadastrar o Funcionario.')</script>";
-    echo "<script type='text/javascript'>window.location='funcionarios.php'</script>";
+    echo "<script type='text/javascript'>window.location='abrir_orcamentos.php'</script>";
 	 }
 }
 
