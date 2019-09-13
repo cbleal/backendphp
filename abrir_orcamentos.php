@@ -42,7 +42,15 @@ require 'conexao.php';
       
       </ul>
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" name="txtPesquisar" placeholder="Pesquisar" aria-label="Pesquisar">
+        <select class="form-group mr-2" id="category" name="status">
+          <option value="Todos">Todos</option>
+          <option value="Aberto">Aberto</option>
+          <option value="Aguardando">Aguardando</option>
+          <option value="Aprovado">Aprovado</option>
+          <option value="Entregue">Entregue</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+        <input class="form-control mr-sm-2" type="date" name="txtPesquisar" placeholder="Pesquisar" aria-label="Pesquisar">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="btPesquisar"><i class="fa fa-search"></i></button>
       </form>
     </div>
@@ -75,7 +83,7 @@ require 'conexao.php';
             <!-- Div Card -->
             <div class="card">              
               <div class="card-header">
-                <h4 class="card-title"> Tabela de Orçamentos</h4>
+                <h4 class="card-title"> Orçamentos Abertos</h4>
               </div>
               <!-- Div Body -->
               <div class="card-body">
@@ -108,12 +116,17 @@ require 'conexao.php';
 
                       <?php
 
-                        if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' ) {
-                          $data = $_GET['txtPesquisar'].'%';
-                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_func FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE data_abertura = $data ORDER BY id ASC";
+                        if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] !='Todos' ) {
+                          $data = $_GET['txtPesquisar'];
+                          $status_orc = $_GET['status'];
+                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_abertura = '{$data}' AND o.status = '{$status_orc}' ORDER BY o.id ASC";
                           
+                        } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] == '' && $_GET['status'] !='Todos' ) {                         
+                          $status_orc = $_GET['status'];
+                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_abertura = curDate() AND o.status = '{$status_orc}' ORDER BY o.id ASC";
+
                         } else {
-                           $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico WHERE data_abertura = curDate() ORDER BY id ASC";
+                           $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico WHERE o.data_abertura = curDate() ORDER BY o.id ASC";
                         } 
                        
                         $result = mysqli_query($conexao, $query);
