@@ -116,15 +116,24 @@ require 'conexao.php';
 
                       <?php
 
+                        // pesquisa pela data e pelo status
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] !='Todos' ) {
                           $data = $_GET['txtPesquisar'];
                           $status_orc = $_GET['status'];
                           $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_abertura = '{$data}' AND o.status = '{$status_orc}' ORDER BY o.id ASC";
-                          
+                        
+                        // pesquisa pela data atual e pelo status  
                         } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] == '' && $_GET['status'] !='Todos' ) {                         
                           $status_orc = $_GET['status'];
                           $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_abertura = curDate() AND o.status = '{$status_orc}' ORDER BY o.id ASC";
 
+                        // pesquisa pela data
+                        } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] == 'Todos' ) {          
+                          $data = $_GET['txtPesquisar'];               
+                          
+                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_abertura = '{$data}' ORDER BY o.id ASC";
+
+                        // lista os orçamentos da data atual
                         } else {
                            $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico WHERE o.data_abertura = curDate() ORDER BY o.id ASC";
                         } 
