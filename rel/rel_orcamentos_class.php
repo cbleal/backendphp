@@ -1,5 +1,10 @@
 <?php 
 
+// pegar o parâmetro id passado por GET
+if (isset($_GET['id'])) {
+	$id = $_GET['id'];
+}
+
 // URL: https://github.com/dompdf/dompdf
 
 // include autoloader
@@ -10,7 +15,7 @@ use Dompdf\Dompdf;
 
 // instantiate and use the dompdf class
 $dompdf = new Dompdf();
-$dompdf->loadHtml(file_get_contents('rel_orcamentos.php'));
+$dompdf->loadHtml(file_get_contents('http://localhost/backendphp/rel/rel_orcamentos.php?id=.$id'));
 
 // (Optional) Setup the paper size and orientation
 $dompdf->setPaper('A4', 'portrait');

@@ -146,7 +146,7 @@ require 'conexao.php';
                             <td><?php echo $row['valor_total']; ?></td>
                             <td><?php echo $row['data_abertura']; ?></td>         
                             <td>
-                              <a class="btn btn-info" href="rel_orcamentos.php?id=<?php echo $row['id'] ?>">
+                              <a class="btn btn-info" href="rel/rel_orcamentos.php?id=<?php echo $row['id'] ?>">
                                 <i class="fas fa-pen-square"></i>
                               </a>
                            
