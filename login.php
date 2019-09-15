@@ -6,6 +6,15 @@ session_start();
 // inclui o arquivo conexao.php
 require 'conexao.php';
 
+// cancelar orçamentos após 5 dias de gerados
+$data_cancelamento = date('Y/m/d', strtotime("-7 days", strtotime(date("Y/m/d")))); // data atual - 7 dias
+$query  = "SELECT * FROM orcamentos WHERE status = 'Aguardando'";
+$result = mysqli_query($conexao, $query);
+while ($row = mysqli_fetch_assoc($result)) {
+ 	$query = "UPDATE orcamentos SET status = 'Cancelado' WHERE data_geracao = '{$data_cancelamento}' ";
+ 	$result = mysqli_query($conexao, $query);
+} 
+
 // se os campos do formulario login estiverem vazios:
 if ( empty($_POST['usuario']) || empty($_POST['senha']) ) {
 	// redireciona para a página inicial index

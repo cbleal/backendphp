@@ -70,6 +70,10 @@ if ($result) {
 		margin:1px;
 	}
 
+	.figura {
+		
+	}
+
 	</style>
 
 </head>
@@ -80,12 +84,16 @@ if ($result) {
 	<div class="cabecalho">
 		
 		<div class="row">
-			<div class="col-sm-4">	
+			<div class="col-sm-5 figura">	
 			  <img src="../img/amarVotebd.png" width="250px">
 			</div>
-			<div class="col-sm-8">	
-			 <h3 class="titulo"><b>Micro Tec - Assistência Técnica</b></h3>
-			 <h6 class="titulo">www.micropointinformatica.com.br</h6>
+			<div class="col-sm-7">	
+				<h3 class="titulo">
+			 		<b>Micropoint - Assistência Técnica</b>
+			 	</h3>
+			 	<h6 class="titulo">
+			 		www.micropointinformatica.com.br
+			 	</h6>
 			</div>
 		</div>
 
@@ -208,7 +216,7 @@ if ($result) {
 			</tr>
 			<tr>
 				<td> <?php echo $row['pecas']; ?> </td>
-				<td> <?php echo $row['valor_pecas']; ?> </td>
+				<td> <?php echo number_format($row['valor_pecas'], 2, ',', '.'); ?> </td>
 				<td> 1 </td>
 				
 			</tr>
@@ -223,11 +231,11 @@ if ($result) {
 			<div class="col-sm-4 areaTotais">
 				<p class="pgto" style="font-size:16px">  
 					<b>Total de Peças: </b> R$ 
-					<?php echo $row['valor_pecas']; ?> 
+					<?php echo number_format($row['valor_pecas'], 2, ',', '.'); ?> 
 				</p>
 				<p class="pgto" style="font-size:16px">  
 					<b>Total Mão de Obra: </b> R$ 
-					<?php echo $row['valor_servico']; ?> 
+					<?php echo number_format($row['valor_servico'], 2, ',', '.'); ?> 
 				</p>
 			</div>
 		</div>
@@ -242,7 +250,7 @@ if ($result) {
 			<div class="col-sm-4 areaTotal">				
 				 <p class="pgto" style="font-size:16px">  
 				 	<b>Total a Pagar: </b> R$ 
-				 	<?php echo $row['valor_total']; ?> 
+				 	<?php echo number_format($row['valor_total'], 2, ',', '.'); ?> 
 				 </p>				
 			</div>
 		</div>
