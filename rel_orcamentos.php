@@ -199,7 +199,10 @@ if (@$_GET['func'] == 'edita') {
   $result = mysqli_query($conexao, $query);
 
   //while ($row = mysqli_fetch_assoc($result)) {
-  $row = mysqli_fetch_assoc($result);  
+  $row = mysqli_fetch_assoc($result); 
+  $cliente = $row['cliente'];
+  $tecnico = $row['tecnico'];
+  $produto = $row['produto']; 
   $sub_total = $row['sub_total'];
 
   ?>
@@ -292,7 +295,11 @@ if (isset($_POST['btSalvar'])) {
     echo "<script type='text/javascript'>window.alert('Erro ao atualizar registro.')</script>";
     echo "<script type='text/javascript'>window.location='rel_orcamentos.php'</script>";
   }
+
+  $query = "INSERT INTO os (id_orc, cliente, produto, tecnico,  valor_total, data_abertura, status) 
+    VALUES ('{$id}', '{$cliente}', '{$produto}', '{$tecnico}', '{$valor_total}', curDate(), 'Aberto')";
   
+  $result = mysqli_query($conexao, $query);
 }
 
 ?>
