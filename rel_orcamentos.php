@@ -116,21 +116,21 @@ require 'conexao.php';
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] != '' ) {
                           $data = $_GET['txtPesquisar'];
                           $status_orc = $_GET['status'];
-                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.data_abertura, o.data_geracao, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_geracao = '{$data}' AND o.status = '{$status_orc}' ORDER BY o.id ASC";
+                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.data_abertura, o.data_geracao, o.status, c.nome as nome_cli, c.email, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_geracao = '{$data}' AND o.status = '{$status_orc}' ORDER BY o.id ASC";
                         
                         // pesquisa pela data atual e pelo status Aguardando  
                         } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] == '' && $_GET['status'] != 'Aprovado' ) {                         
                           $status_orc = $_GET['status'];
-                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.data_abertura, o.data_geracao, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_geracao = curDate() AND o.status = '{$status_orc}' ORDER BY o.id ASC";
+                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.data_abertura, o.data_geracao, o.status, c.nome as nome_cli, c.email, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_geracao = curDate() AND o.status = '{$status_orc}' ORDER BY o.id ASC";
                         
                         // pesquisa pela data atual e pelo status Aprovado  
                         } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] == '' && $_GET['status'] == 'Aprovado' ) {                         
                           $status_orc = $_GET['status'];
-                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.data_abertura, o.data_geracao, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_geracao = curDate() AND o.status = '{$status_orc}' ORDER BY o.id ASC";
+                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.data_abertura, o.data_geracao, o.status, c.nome as nome_cli, c.email, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_geracao = curDate() AND o.status = '{$status_orc}' ORDER BY o.id ASC";
 
                         // lista os orçamentos da data atual
                         } else {
-                           $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.data_abertura, o.data_geracao, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico WHERE o.data_geracao = curDate() ORDER BY o.id ASC";
+                           $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.data_abertura, o.data_geracao, o.status, c.nome as nome_cli, c.email, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico WHERE o.data_geracao = curDate() ORDER BY o.id ASC";
                         } 
                        
                         $result = mysqli_query($conexao, $query);
@@ -146,13 +146,13 @@ require 'conexao.php';
                             <td><?php echo $row['valor_total']; ?></td>
                             <td><?php echo $row['data_abertura']; ?></td>         
                             <td>
-                              <a class="btn btn-info" href="rel/rel_orcamentos.php?id=<?php echo $row['id'] ?>">
-                                <i class="fas fa-pen-square"></i>
+                              <a class="btn btn-info" href="rel/rel_orcamentos.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>">
+                                <i class="fas fa-print"></i>
                               </a>
                            
-                              <!--<a class="btn btn-danger" href="abrir_orcamentos.php?func=deleta&id=<?php echo $row['id'] ?>">
-                                <i class="fas fa-trash-alt"></i>
-                              </a>-->
+                              <a class="btn btn-success" href="rel_orcamentos.php?func=edita&id=<?php echo $row['id'] ?>">
+                                <i class="fas fa-check-circle"></i>
+                              </a>
                             </td>
                           </tr>                         
 
@@ -189,3 +189,112 @@ require 'conexao.php';
 
 </body>
 </html>
+
+<!-- Alteração -->
+<?php 
+if (@$_GET['func'] == 'edita') {
+  $id = $_GET['id'];
+
+  $query  = "SELECT * FROM orcamentos WHERE id = '{$id}' ";
+  $result = mysqli_query($conexao, $query);
+
+  //while ($row = mysqli_fetch_assoc($result)) {
+  $row = mysqli_fetch_assoc($result);  
+  $sub_total = $row['sub_total'];
+
+  ?>
+
+    <!-- Modal -->
+      <div id="modalEditar" class="modal fade" role="dialog">
+        <!-- Form -->
+        <form method="POST">
+          <!-- Div Modal Dialog -->
+          <div class="modal-dialog">
+            <!-- Modal Content-->
+            <div class="modal-content">
+
+              <!-- Modal Header-->
+              <div class="modal-header">              
+                <h4 class="modal-title">Aprovar Orçamento</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <!-- Fim Modal Header -->
+
+              <!-- Modal Body -->
+              <div class="modal-body">
+
+                <div class="form-group">
+                  <label for="fornecedor">Forma Pagto</label>
+                  <select class="form-control mr-2" name="pgto" id="pgto">
+                        <option value="Dinheiro"> Dinheiro</option>
+                        <option value="Cartão"> Cartão</option>
+                  </select>                  
+                </div>
+
+                <div class="form-group">
+                  <label for="id_produto">Desconto</label>
+                  <input type="text" class="form-control mr-2" name="txtdesconto" id="txtdesconto" placeholder="Desconto" required>
+                </div>
+
+              </div>
+              <!-- Modal Body-->
+                     
+              <!-- Modal Footer -->
+              <div class="modal-footer">
+                 <button type="submit" class="btn btn-success mb-3" name="btSalvar">Salvar </button>
+
+                  <button type="button" class="btn btn-danger mb-3" data-dismiss="modal">Cancelar </button>
+
+              </div>
+              <!-- Fim Modal Footer -->
+
+            </div>
+            <!-- Fim Modal Content-->
+          </div>
+          <!-- Fim Div Modal Dialog -->
+        </form>
+        <!-- Fim Form -->
+    </div>
+    <!-- Fim Modal -->
+
+<!-- Abre Janela Modal -->
+<script type="text/javascript">
+$(document).ready(function(){
+  // Show the Modal on load
+  $("#modalEditar").modal("show");    
+ 
+});
+</script>
+
+<!-- Salvar os dados UPDATE -->
+<?php 
+
+if (isset($_POST['btSalvar'])) {
+  $pgto        = $_POST['pgto'];
+  $desconto    = $_POST['txtdesconto'];
+  $valor_total = $sub_total - $desconto;
+  
+  $query = "UPDATE orcamentos
+            SET desconto       = '{$desconto}',
+                valor_total    = '{$valor_total}',
+                pgto_tipo      = '{$pgto}',                
+                data_aprovacao = curDate(),
+                status         = 'Aprovado'
+                
+            WHERE id = '{$id}'";
+
+  $result = mysqli_query($conexao, $query);
+
+  if ($result) {
+    echo "<script type='text/javascript'>window.alert('Orçamento aprovado com sucesso.')</script>";
+    echo "<script type='text/javascript'>window.location='rel_orcamentos.php'</script>";
+  } else {
+    echo "<script type='text/javascript'>window.alert('Erro ao atualizar registro.')</script>";
+    echo "<script type='text/javascript'>window.location='rel_orcamentos.php'</script>";
+  }
+  
+}
+
+?>
+
+<?php } ?> 

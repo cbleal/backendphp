@@ -1,8 +1,9 @@
 <?php 
 
 // pegar o parâmetro id passado por GET
-if (isset($_GET['id'])) {
-	$id = $_GET['id'];
+if ( isset($_GET['id']) && isset($_GET['email']) ) {
+	$id    = $_GET['id'];
+	$email = $_GET['email'];
 }
 
 // URL: https://github.com/dompdf/dompdf
@@ -29,5 +30,12 @@ $dompdf->stream(
 	array("Attachment" => false)
 );
 
+//Enviar orçamento por email
+/*$to = 'cborgesleal@gmail.com';
+$subject = 'Systec Orçamento';
+$message = file_get_contents("http://localhost... sem id");
+$dest = $email;
+$headers = 'Content-Type: text/html; charset=utf-8;';
+mail($to, $subject, $message, $headers);*/
 
 ?>
