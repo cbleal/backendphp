@@ -74,18 +74,18 @@ require 'verificar_login.php';
             </a>
           </li>
           <li>
-            <a href="./user.html">
+            <a href="os_abertas.php">
               <i class="nc-icon nc-single-02"></i>
-              <p>User Profile</p>
+              <p>OS Abertas</p>
             </a>
           </li>
           <li>
-            <a href="./tables.html">
+            <a href="consultar_os.php">
               <i class="nc-icon nc-tile-56"></i>
-              <p>Table List</p>
+              <p>Consultar OS</p>
             </a>
           </li>
-          <li>
+          <!--<li>
             <a href="./typography.html">
               <i class="nc-icon nc-caps-small"></i>
               <p>Typography</p>
@@ -96,7 +96,7 @@ require 'verificar_login.php';
               <i class="nc-icon nc-spaceship"></i>
               <p>Upgrade to PRO</p>
             </a>
-          </li>
+          </li>-->
         </ul>
       </div>
     </div>

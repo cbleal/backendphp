@@ -144,7 +144,7 @@ require 'conexao.php';
                             <td><?php echo $row['nome_tec']; ?></td>
                             <td><?php echo $row['produto']; ?></td>
                             <td><?php echo $row['valor_total']; ?></td>
-                            <td><?php echo $row['data_abertura']; ?></td>         
+                            <td><?php echo date( 'd/m/Y', strtotime($row['data_abertura']) ); ?></td>         
                             <td>
                               <a class="btn btn-info" href="rel/rel_orcamentos.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>">
                                 <i class="fas fa-print"></i>
@@ -297,7 +297,7 @@ if (isset($_POST['btSalvar'])) {
   }
 
   $query = "INSERT INTO os (id_orc, cliente, produto, tecnico,  valor_total, data_abertura, status) 
-    VALUES ('{$id}', '{$cliente}', '{$produto}', '{$tecnico}', '{$valor_total}', curDate(), 'Aberto')";
+    VALUES ('{$id}', '{$cliente}', '{$produto}', '{$tecnico}', '{$valor_total}', curDate(), 'Aberta')";
   
   $result = mysqli_query($conexao, $query);
 }
