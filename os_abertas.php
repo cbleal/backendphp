@@ -136,11 +136,11 @@ $tecnico = $_SESSION['nome_usuario'];
                             <td><?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?></td>         
                             <td>
                               <a class="btn btn-info" href="os_abertas.php?func=edita&id=<?php echo $row['id'] ?>" onclick="return confirm('Confirma o fechamento da O.S ?')">
-                                <i class="fas fa-pen-square"></i>
+                                <i class="fas fa-check-circle"></i>
                               </a>
                            
                               <a class="btn btn-danger" href="os_abertas.php?func=deleta&id=<?php echo $row['id'] ?>" onclick="return confirm('Confirma o cancelamento da O.S ?')">
-                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-minus-square"></i>
                               </a>
                             </td>
                           </tr>                         

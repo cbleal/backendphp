@@ -43,10 +43,10 @@ require 'conexao.php';
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <select class="form-group mr-2" id="category" name="status">
-          <option value="Todos">Todas</option>
-          <option value="Aberto">Aberta</option>
-          <option value="Aguardando">Fechada</option>          
-          <option value="Cancelado">Cancelada</option>
+          <option value="Todas">Todas</option>
+          <option value="Aberta">Aberta</option>
+          <option value="Fechada">Fechada</option>          
+          <option value="Cancelada">Cancelada</option>
         </select>
         <input class="form-control mr-sm-2" type="date" name="txtPesquisar" placeholder="Pesquisar" aria-label="Pesquisar">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="btPesquisar"><i class="fa fa-search"></i></button>
@@ -91,7 +91,7 @@ require 'conexao.php';
                   <table class="table">
                     <thead class=" text-primary">                          
                       <th>
-                        Nome
+                        Cliente
                       </th>
                       <th>
                         Produto
@@ -99,7 +99,7 @@ require 'conexao.php';
                       <th>
                         Técnico
                       </th>
-                      <th>
+                      <th style="text-align: right">
                         Valor Total
                       </th>
                       <th>
@@ -120,26 +120,27 @@ require 'conexao.php';
 
                       <?php
 
-                        // pesquisa pela data e pelo status
+                        // pesquisa pela data informada e pelo status diferente de Todas
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] !='Todas' ) {
                           $data = $_GET['txtPesquisar'];
                           $status_orc = $_GET['status'];
-                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_abertura = '{$data}' AND o.status = '{$status_orc}' ORDER BY o.id ASC";
+                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = '{$data}' AND ord.status = '{$status_orc}' ORDER BY ord.id ASC";
                         
-                        // pesquisa pela data atual e pelo status  
-                        } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] == '' && $_GET['status'] !='Todos' ) {                         
+                        // pesquisa pela data atual e pelo status diferente de Todas 
+                        } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] == '' && $_GET['status'] !='Todas' ) {                         
                           $status_orc = $_GET['status'];
-                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_abertura = curDate() AND o.status = '{$status_orc}' ORDER BY o.id ASC";
 
-                        // pesquisa pela data
-                        } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] == 'Todos' ) {          
+                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = curDate() AND ord.status = '{$status_orc}' ORDER BY ord.id ASC";
+
+                        // pesquisa pela data informada e pelo status igual a Todas
+                        } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] == 'Todas' ) {          
                           $data = $_GET['txtPesquisar'];               
                           
-                          $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico  WHERE o.data_abertura = '{$data}' ORDER BY o.id ASC";
+                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = '{$data}' ORDER BY ord.id ASC";
 
-                        // lista os orçamentos da data atual
+                        // lista todos orçamentos da data atual
                         } else {
-                           $query = "SELECT o.id, o.cliente, o.tecnico, o.produto, o.valor_total, o.status, c.nome as nome_cli, f.nome as nome_tec FROM orcamentos as o INNER JOIN clientes as c ON c.cpf = o.cliente INNER JOIN funcionarios f ON f.id = o.tecnico WHERE o.data_abertura = curDate() ORDER BY o.id ASC";
+                           $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = curDate() ORDER BY ord.id ASC";
                         } 
                        
                         $result = mysqli_query($conexao, $query);
@@ -150,9 +151,11 @@ require 'conexao.php';
 
                           <tr>
                             <td><?php echo $row['nome_cli']; ?></td>
-                            <td><?php echo $row['nome_tec']; ?></td>
                             <td><?php echo $row['produto']; ?></td>
-                            <td><?php echo $row['valor_total']; ?></td>
+                            <td><?php echo $row['nome_tec']; ?></td>
+                            <td style="text-align: right"><?php echo number_format($row['valor_total'], 2, ',', '.'); ?></td>
+                            <td style="text-align: center"><?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?></td>
+                            <td style="text-align: center;"><?php echo date('d/m/Y', strtotime($row['data_fechamento'])); ?></td>
                             <td><?php echo $row['status']; ?></td>         
                             <td>
                               <a class="btn btn-info" href="abrir_orcamentos.php?func=edita&id=<?php echo $row['id'] ?>">
