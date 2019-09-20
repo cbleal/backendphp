@@ -124,28 +124,32 @@ require 'conexao.php';
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] !='Todas' ) {
                           $data = $_GET['txtPesquisar'];
                           $status_orc = $_GET['status'];
-                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = '{$data}' AND ord.status = '{$status_orc}' ORDER BY ord.id ASC";
+                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, c.email, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = '{$data}' AND ord.status = '{$status_orc}' ORDER BY ord.id ASC";
                         
                         // pesquisa pela data atual e pelo status diferente de Todas 
                         } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] == '' && $_GET['status'] !='Todas' ) {                         
                           $status_orc = $_GET['status'];
 
-                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = curDate() AND ord.status = '{$status_orc}' ORDER BY ord.id ASC";
+                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, c.email, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = curDate() AND ord.status = '{$status_orc}' ORDER BY ord.id ASC";
 
                         // pesquisa pela data informada e pelo status igual a Todas
                         } else if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' && $_GET['status'] == 'Todas' ) {          
                           $data = $_GET['txtPesquisar'];               
                           
-                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = '{$data}' ORDER BY ord.id ASC";
+                          $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, c.email, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = '{$data}' ORDER BY ord.id ASC";
 
                         // lista todos orçamentos da data atual
                         } else {
-                           $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = curDate() ORDER BY ord.id ASC";
+                           $query = "SELECT ord.id, ord.cliente, ord.tecnico, ord.produto, ord.valor_total, ord.data_abertura, ord.data_fechamento, ord.status, c.nome as nome_cli, c.email, f.nome as nome_tec FROM os as ord INNER JOIN clientes as c ON c.cpf = ord.cliente INNER JOIN funcionarios f ON f.id = ord.tecnico WHERE ord.data_abertura = curDate() ORDER BY ord.id ASC";
                         } 
                        
                         $result = mysqli_query($conexao, $query);
 
                         while ($row = mysqli_fetch_assoc($result)) {
+
+                          $data_abertura = implode('/', array_reverse(explode('-', $row['data_abertura'])));
+
+                          $data_fechamento = implode('/', array_reverse(explode('-', $row['data_fechamento'])));
                           
                         ?>
 
@@ -154,12 +158,12 @@ require 'conexao.php';
                             <td><?php echo $row['produto']; ?></td>
                             <td><?php echo $row['nome_tec']; ?></td>
                             <td style="text-align: right"><?php echo number_format($row['valor_total'], 2, ',', '.'); ?></td>
-                            <td style="text-align: center"><?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?></td>
-                            <td style="text-align: center;"><?php echo date('d/m/Y', strtotime($row['data_fechamento'])); ?></td>
+                            <td style="text-align: center"><?php echo $data_abertura; ?></td>
+                            <td style="text-align: center;"><?php echo $data_fechamento; ?></td>
                             <td><?php echo $row['status']; ?></td>         
                             <td>
-                              <a class="btn btn-info" href="abrir_orcamentos.php?func=edita&id=<?php echo $row['id'] ?>">
-                                <i class="fas fa-pen-square"></i>
+                              <a class="btn btn-info" href="rel/rel_os.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>">
+                                <i class="fas fa-print"></i>
                               </a>
                            
                               <a class="btn btn-danger" href="abrir_orcamentos.php?func=deleta&id=<?php echo $row['id'] ?>">
