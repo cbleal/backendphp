@@ -134,7 +134,8 @@ require 'conexao.php';
                         ?>
 
                           <tr>
-                            <td><?php echo $row['nome']; ?></td>
+
+                            <td><?php echo '<a class="link" href="servicos_clientes.php?cpf='.$row['cpf'].'">'; echo $row['nome']; '</a>'; ?></td>
                             <td><?php echo $row['telefone']; ?></td>
                             <td><?php echo $row['endereco']; ?></td>
                             <td><?php echo $row['email']; ?></td>

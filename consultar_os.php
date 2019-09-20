@@ -160,9 +160,27 @@ require 'conexao.php';
                             <td style="text-align: right"><?php echo number_format($row['valor_total'], 2, ',', '.'); ?></td>
                             <td style="text-align: center"><?php echo $data_abertura; ?></td>
                             <td style="text-align: center;"><?php echo $data_fechamento; ?></td>
-                            <td><?php echo $row['status']; ?></td>         
+                            <td><?php echo $row['status']; ?></td> 
+
+                            <?php
+                              if ($row['status'] == 'Fechada'):
+                                ?>
+                                <td>
+                                  <a class="btn btn-info" href="rel/rel_os.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>">
+                                    <i class="fas fa-print"></i>
+                                  </a>
+                           
+                                  <a class="btn btn-danger" href="abrir_orcamentos.php?func=deleta&id=<?php echo $row['id'] ?>">
+                                    <i class="fas fa-trash-alt"></i>
+                                  </a>
+                                </td>
+
+                            <?php 
+                              else:
+                            ?>
+                                  
                             <td>
-                              <a class="btn btn-info" href="rel/rel_os.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>">
+                              <a class="btn btn-secondary" href="#">
                                 <i class="fas fa-print"></i>
                               </a>
                            
@@ -170,7 +188,9 @@ require 'conexao.php';
                                 <i class="fas fa-trash-alt"></i>
                               </a>
                             </td>
-                          </tr>                         
+                          </tr> 
+
+                          <?php endif ?>                        
 
                           <?php } 
 
