@@ -194,6 +194,7 @@ if (@$_GET['func'] == 'edita') {
   $id = $_GET['id'];
   $query  = "UPDATE os SET data_fechamento = curDate(), status = 'Fechada' WHERE id = '{$id}' ";
   mysqli_query($conexao, $query);
+  echo "<script type='text/javascript'>window.location='os_abertas.php'</script>";
 
 }
 

@@ -18,7 +18,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
 ?>
 
 <!DOCTYPE html>
-<html lang="br">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
@@ -26,7 +26,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    SysTec Freitas
+    SysTec Micropoint
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
@@ -79,15 +79,15 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
             </a>
           </li>
           <li>
-            <a href="./icons.html">
+            <a href="#" data-toggle="modal" data-target=#modalOrc>
               <i class="nc-icon nc-diamond"></i>
-              <p>Icons</p>
+              <p>Relatório Orçamentos</p>
             </a>
           </li>
           <li>
-            <a href="./map.html">
+            <a href="#" data-toggle="modal" data-target="#modalOS">
               <i class="nc-icon nc-pin-3"></i>
-              <p>Maps</p>
+              <p>Relatório de O.S.</p>
             </a>
           </li>
           <li>
@@ -275,7 +275,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
             <nav class="footer-nav">
               <ul>
                 <li>
-                  <a href="https://www.creative-tim.com" target="_blank">SYSTEC FREITAS</a>
+                  <a href="https://www.creative-tim.com" target="_blank">SYSTEC MICROPOINT</a>
                 </li>
                 <li>
                   <a href="http://blog.creative-tim.com/" target="_blank">Blog</a>
@@ -290,7 +290,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                 ©
                 <script>
                   document.write(new Date().getFullYear())
-                </script>, Treinamento PHP <i class="fa fa-heart heart"></i> Hugo Vasconcelos
+                </script>, Treinamento PHP <i class="fa fa-heart heart"></i> Micropint Informática
               </span>
             </div>
           </div>
@@ -319,6 +319,102 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
       demo.initChartsPages();
     });
   </script>
-</body>
 
+  <!-- Modal Orçamento -->
+  <div class="modal fade" id="modalOrc" role="dialog">
+     <!-- Form -->
+    <form method="POST" action="rel/rel_orcamentos_data_class.php">
+    <!-- Modal Dialog -->
+      <div class="modal-dialog modal-lg">
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <!-- Modal Title -->
+            <h4 class="modal-title">Relatório de Orçamento</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <!-- Fim Modal Title -->
+          </div>
+          <!-- Fim Modal Header -->
+
+          <!-- Modal Body -->
+          <div class="modal-body">
+           
+
+              <!-- Row 1 -->
+              <div class="row">
+                <!-- Col Status -->
+                <div class="col-md-4">
+                  <label>Status</label>
+                </div>
+                <!-- Fim Col Status -->
+                <!-- Col Data Inicial -->
+                <div class="col-md-4">
+                  <label>Data Inicial</label>
+                </div>
+                <!-- Fim Col Data Inicial -->
+                <!-- Col Data Final -->
+                <div class="col-md-4">
+                  <label>Data Final</label>
+                </div>
+                <!-- Fim Col Data Inicial -->
+              </div>
+              <!-- Fim Row 1 -->
+
+              <!-- Row 2 -->
+              <div class="row">
+                <!-- Col Status -->
+                <div class="col-md-4 mt-2">
+                  <select class="form-control" id="category" name="status">
+                    <option value="Todos">Todos</option>
+                    <option value="Aberto">Aberto</option>
+                    <option value="Aguardando">Aguardando</option>
+                    <option value="Aprovado">Aprovado</option>
+                    <option value="Cancelado">Cancelado</option>
+                  </select>
+                </div>
+                <!-- Fim Col Status -->
+                <!-- Col Data Inicial -->
+                <div class="col-md-4 mt-2">
+                  <input class="form-control" type="date" name="txtDataInicial">
+                </div>
+                <!-- Fim Col Data Inicial -->
+                <!-- Col Data Final -->
+                <div class="col-md-4 mt-2">
+                  <input class="form-control" type="date" name="txtDataFinal">
+                </div>
+                <!-- Fim Col Data Inicial -->
+              </div>
+              <!-- Fim Row 2 -->
+
+            
+            <!-- Fim Form -->
+          </div>
+          <!-- Fim Modal Body -->
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button class="btn btn-success mb-3" type="submit" name="btnOK">
+              OK
+            </button>
+            <button class="btn btn-danger mb-3" type="button" data-dismiss="modal">
+              Cancelar
+            </button>
+
+          </div>
+          <!-- Fim Modal Footer -->
+
+        </div>
+        <!-- Fim Modal Content -->
+      </div>
+      <!-- Fim Modal Dialog -->
+    </form>
+    <!-- Fim Form -->
+  </div>
+  <!-- Fim Modal Orçamento -->
+
+</body>
 </html>
