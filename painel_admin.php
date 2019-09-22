@@ -342,8 +342,6 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
 
           <!-- Modal Body -->
           <div class="modal-body">
-           
-
               <!-- Row 1 -->
               <div class="row">
                 <!-- Col Status -->
@@ -389,9 +387,6 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                 <!-- Fim Col Data Inicial -->
               </div>
               <!-- Fim Row 2 -->
-
-            
-            <!-- Fim Form -->
           </div>
           <!-- Fim Modal Body -->
 
@@ -403,7 +398,6 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
             <button class="btn btn-danger mb-3" type="button" data-dismiss="modal">
               Cancelar
             </button>
-
           </div>
           <!-- Fim Modal Footer -->
 
@@ -415,6 +409,95 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
     <!-- Fim Form -->
   </div>
   <!-- Fim Modal Orçamento -->
+
+  <!-- Modal OS -->
+  <div class="modal fade" id="modalOS" role="dialog">
+    <!-- Form -->
+    <form method="POST" action="rel/rel_os_data_class.php">
+      <!-- Modal Dialog -->
+      <div class="modal-dialog modal-lg">
+        <!-- Modal Content -->
+        <div class="modal-content">
+          
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <!-- Modal Title -->
+            <h4 class="modal-title">Relatório de Ordens de Srviço</h4>
+            <button class="close" type="button" data-dismiss="modal">
+              &times;
+            </button>
+            <!-- Fim Modal Title -->
+          </div>
+          <!-- Fim Modal Header -->
+
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <!-- Row 1 -->
+            <div class="row">
+              <!-- Col Status -->
+              <div class="col-md-4">
+                 <label>Status</label>
+              </div>
+              <!-- Fim Col Status -->
+              <!-- Col Data Inicial -->
+              <div class="col-md-4">
+                <label>Data Inicial</label>
+              </div>
+              <!-- Fim Col Data Inicial -->
+              <!-- Col Data Final -->
+                <div class="col-md-4">
+                  <label>Data Final</label>
+                </div>
+                <!-- Fim Col Data Inicial -->
+              </div>
+              <!-- Fim Row 1 -->
+
+            <!-- Row 2 -->
+            <div class="row">
+              <!-- Col Status -->
+              <div class="col-md-4 mt-2">
+                <select class="form-control" id="category" name="status">
+                  <option value="Todas">Todas</option>
+                  <option value="Aberta">Aberta</option>
+                  <option value="Fechada">Fechada</option>
+                  <option value="Cancelada">Cancelada</option>
+                </select>
+              </div>
+              <!-- Fim Col Status -->
+              <!-- Col Data Inicial -->
+              <div class="col-md-4 mt-2">
+                <input class="form-control" type="date" name="txtDataInicial">
+              </div>
+              <!-- Fim Col Data Inicial -->
+              <!-- Col Data Final -->
+              <div class="col-md-4 mt-2">
+                <input class="form-control" type="date" name="txtDataFinal">
+              </div>
+              <!-- Fim Col Data Inicial -->
+            </div>
+            <!-- Fim Row 2 -->
+          </div>
+          <!-- Fim Modal Body -->
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button class="btn btn-success mb-3" type="submit" name="btnOK">
+              OK
+            </button>
+            <button class="btn btn-danger mb-3" type="button" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+          <!-- Fim Modal Footer -->
+
+        </div>
+        <!-- Fim Modal Content -->
+      </div>
+      <!-- Fim Modal Dialog -->
+    </form>
+    <!-- Fim Form -->
+  </div>
+  <!-- Fim Modal OS -->
 
 </body>
 </html>
