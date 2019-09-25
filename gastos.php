@@ -222,11 +222,12 @@ require 'conexao.php';
 <?php  
 
 if (isset($_POST['btSalvar'])) {
-  $valor  = $_POST['txtvalor'];
+  //$valor  = (float) number_format($_POST['txtvalor'], 2, '.', ',');
+  $valor  = str_replace(',', '.', str_replace('.', '', $_POST['txtvalor']));
   $motivo = $_POST['txtmotivo'];
   $funcionario = $_SESSION['nome_usuario']; 	
 
-	 // Inserir no banco	
+	 // Inserir no banco gastos
    $query  = "INSERT INTO gastos (valor, motivo, funcionario, data) 
               VALUES (
                       '{$valor}', 
@@ -235,16 +236,39 @@ if (isset($_POST['btSalvar'])) {
                       curdate() 
                     )";
 
-	 $result = mysqli_query($conexao, $query);
+	 $result = mysqli_query($conexao, $query);  
+
+   if ($result) { 
+
+   // Recuperar o último id inserido
+   $query_id  = "SELECT * FROM gastos ORDER BY id DESC LIMIT 1";
+   $result_id = mysqli_query($conexao, $query_id);
+   $row       = mysqli_fetch_assoc($result_id);
+   $id_gasto  = $row['id'];
+   
+   // Inserir no banco movimentacoes
+   $query_mov = "INSERT INTO 
+                movimentacoes (tipo, movimento, valor, funcionario, data, id_gasto) 
+                VALUES (
+                          'Saida', 
+                          'Gasto', 
+                          '{$valor}', 
+                          '{$funcionario}', 
+                          curdate(), 
+                          '{$id_gasto}'
+                        )";
+
+    mysqli_query($conexao, $query_mov);
 	
-	 if ($result) {
+	 
 	 	echo "<script type='text/javascript'>window.alert('Gasto cadastrado com sucesso.')</script>";
     echo "<script type='text/javascript'>window.location='gastos.php'</script>";
 
 	 } else {
 	 	echo "<script type='text/javascript'>window.alert('Erro ao cadastrar o Gasto.')</script>";
     echo "<script type='text/javascript'>window.location='gastos.php'</script>";
-	 }
+	 }         
+    
 }
 
 ?>
@@ -253,8 +277,13 @@ if (isset($_POST['btSalvar'])) {
 <?php 
 if (@$_GET['func'] == 'deleta') {
   $id = $_GET['id'];
-  $query = "DELETE FROM gastos WHERE id = $id";
-  mysqli_query($conexao, $query);  
+  // TABELA GASTOS
+  $query = "DELETE FROM gastos WHERE id = '{$id}' ";
+  mysqli_query($conexao, $query);
+  // TABELA MOVIMENTACOES
+  $query = "DELETE FROM movimentacoes WHERE movimento = 'Gasto' AND id_gasto = '{$id}' ";  
+  mysqli_query($conexao, $query);
+
   echo "<script type='text/javascript'>window.location='gastos.php'</script>";
   
 }
