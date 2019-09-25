@@ -198,7 +198,7 @@ require 'conexao.php';
 
                 <div class="form-group">
                   <label for="id_produto">Telefone</label>
-                  <input type="text" class="form-control mr-2" name="txttelefone" id="txttelefone" placeholder="Telefone" required>
+                  <input type="text" minlength="11" maxlength="11" class="form-control mr-2" name="txttelefone" id="txttelefone" placeholder="Telefone" onkeypress="$(this).mask('(00) 00000-0009')" required>
                 </div>
 
                 <div class="form-group">
@@ -213,7 +213,7 @@ require 'conexao.php';
 
                 <div class="form-group">
                   <label for="fornecedor">CPF</label>
-                   <input type="text" class="form-control mr-2" name="txtcpf" id="txtcpf" placeholder="CPF" required>
+                   <input type="text" minlength="11" maxlength="11" class="form-control mr-2" name="txtcpf" id="txtcpf" placeholder="CPF" onkeypress="$(this).mask('000.000.000-00')" required>
                 </div>
 
               </div>
@@ -335,7 +335,7 @@ if (@$_GET['func'] == 'edita') {
 
                 <div class="form-group">
                   <label for="id_produto">Telefone</label>
-                  <input type="text" class="form-control mr-2" name="txttelefone" id="txttelefone" value="<?php echo $row['telefone'] ?>" placeholder="Telefone" required>
+                  <input type="text" minlenght="11" maxlength="11" class="form-control mr-2" name="txttelefone" id="txttelefone" value="<?php echo $row['telefone'] ?>" placeholder="Telefone" onkeypress="$(this).mask('(00) 00000-0009')" required>
                 </div>
 
                 <div class="form-group">
@@ -350,7 +350,7 @@ if (@$_GET['func'] == 'edita') {
 
                 <div class="form-group">
                   <label for="fornecedor">CPF</label>
-                   <input type="text" class="form-control mr-2" name="txtcpf" id="txtcpf" value="<?php echo $row['cpf'] ?>" placeholder="CPF" required>
+                   <input type="text" minlength="11" maxlength="11" class="form-control mr-2" name="txtcpf" id="txtcpf" value="<?php echo $row['cpf'] ?>" placeholder="CPF" onkeypress="$(this).mask('000.000.000-00')" required>
                 </div>
 
               </div>
