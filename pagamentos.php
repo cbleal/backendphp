@@ -10,7 +10,7 @@ require 'conexao.php';
 
 <head>
   <!-- Titulo -->
-  <title>Gastos</title>
+  <title>Pagamentos</title>
   <!-- Meta -->
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
  
@@ -77,7 +77,7 @@ require 'conexao.php';
             <!-- Div Card -->
             <div class="card">              
               <div class="card-header">
-                <h4 class="card-title"> Tabela de Gastos</h4>
+                <h4 class="card-title"> Tabela de Pagamentos</h4>
               </div>
               <!-- Div Body -->
               <div class="card-body">
@@ -90,10 +90,10 @@ require 'conexao.php';
                         Valor
                       </th>
                       <th>
-                        Motivo
+                        Funcionario Pago
                       </th>
                       <th>
-                        Funcionario
+                        Tesoureiro
                       </th>                      
                       <th>
                         Data
@@ -109,10 +109,10 @@ require 'conexao.php';
 
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' ) {
                           $data = $_GET['txtPesquisar'];
-                          $query = "SELECT * FROM gastos WHERE data = '{$data}'ORDER BY id ASC";
+                          $query = "SELECT * FROM pagamentos WHERE data = '{$data}'ORDER BY id ASC";
                           
                         } else {
-                           $query  = "SELECT * FROM gastos WHERE data = curdate() ORDER BY id ASC";
+                           $query  = "SELECT * FROM pagamentos WHERE data = curdate() ORDER BY id ASC";
                         } 
                        
                         $result = mysqli_query($conexao, $query);
@@ -123,15 +123,15 @@ require 'conexao.php';
 
                           <tr>
                             <td><?php echo $row['valor']; ?></td>
-                            <td><?php echo $row['motivo']; ?></td>
                             <td><?php echo $row['funcionario']; ?></td>
+                            <td><?php echo $row['tesoureiro']; ?></td>
                             <td><?php echo date('d/m/Y', strtotime($row['data'])); ?></td>  
                             <td>
-                              <a class="btn btn-info" href="gastos.php?func=edita&id=<?php echo $row['id'] ?>">
+                              <!--<a class="btn btn-info" href="pagamentos.php?func=edita&id=<?php echo $row['id'] ?>">
                                 <i class="fas fa-pen-square"></i>
-                              </a>
+                              </a>-->
                            
-                              <a class="btn btn-danger" href="gastos.php?func=deleta&id=<?php echo $row['id'] ?>">
+                              <a class="btn btn-danger" href="pagamentos.php?func=deleta&id=<?php echo $row['id'] ?>">
                                 <i class="fas fa-trash-alt"></i>
                               </a>
                             </td>
@@ -168,7 +168,7 @@ require 'conexao.php';
 
               <!-- Modal Header-->
               <div class="modal-header">              
-                <h4 class="modal-title">Gastos</h4>
+                <h4 class="modal-title">Pagamentos</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
               <!-- Fim Modal Header -->
@@ -182,8 +182,23 @@ require 'conexao.php';
                 </div>
                
                 <div class="form-group">
-                  <label for="quantidade">Motivo</label>
-                  <input type="text" class="form-control mr-2" name="txtmotivo" id="txtmotivo" placeholder="Motivo" required>
+                  <label for="quantidade">Funcionario</label>
+                  <select class="form-control mr-2" name="txtfuncionario" id="txtfuncionario">
+                    <?php
+                    $query  = "SELECT * FROM funcionarios";
+                    $result = mysqli_query($conexao, $query);
+                    if ($result) {
+                      while ($row = mysqli_fetch_assoc($result)) {
+                        ?>
+                        <option value="<?php echo $row['nome']; ?>">
+                          <?php echo $row['nome']; ?>
+                        </option>
+
+                      <?php
+                      }
+                    }
+                    ?>
+                  </select>
                 </div>
 
               </div>
@@ -221,18 +236,17 @@ require 'conexao.php';
 <!-- Cadastrar -->
 <?php  
 
-if (isset($_POST['btSalvar'])) {
-  //$valor  = (float) number_format($_POST['txtvalor'], 2, '.', ',');
+if (isset($_POST['btSalvar'])) {  
   $valor  = str_replace(',', '.', str_replace('.', '', $_POST['txtvalor']));
-  $motivo = $_POST['txtmotivo'];
-  $funcionario = $_SESSION['nome_usuario']; 	
+  $funcionario = $_POST['txtfuncionario'];
+  $tesoureiro  = $_SESSION['nome_usuario']; 	
 
 	 // Inserir no banco gastos
-   $query  = "INSERT INTO gastos (valor, motivo, funcionario, data) 
+   $query  = "INSERT INTO pagamentos (valor, funcionario, tesoureiro, data) 
               VALUES (
-                      '{$valor}', 
-                      '{$motivo}', 
-                      '{$funcionario}',                       
+                      '{$valor}',                       
+                      '{$funcionario}', 
+                      '{$tesoureiro}',                       
                       curdate() 
                     )";
 
@@ -241,7 +255,7 @@ if (isset($_POST['btSalvar'])) {
    if ($result) { 
 
    // Recuperar o último id inserido
-   $query_id  = "SELECT * FROM gastos ORDER BY id DESC LIMIT 1";
+   $query_id  = "SELECT * FROM pagamentos ORDER BY id DESC LIMIT 1";
    $result_id = mysqli_query($conexao, $query_id);
    $row       = mysqli_fetch_assoc($result_id);
    $id_ultimo = $row['id'];
@@ -251,9 +265,9 @@ if (isset($_POST['btSalvar'])) {
                 movimentacoes (tipo, movimento, valor, funcionario, data, id_gasto) 
                 VALUES (
                           'Saida', 
-                          'Gasto', 
+                          'Pagamento', 
                           '{$valor}', 
-                          '{$funcionario}', 
+                          '{$tesoureiro}', 
                           curdate(), 
                           '{$id_ultimo}'
                         )";
@@ -261,12 +275,12 @@ if (isset($_POST['btSalvar'])) {
     mysqli_query($conexao, $query_mov);
 	
 	 
-	 	echo "<script type='text/javascript'>window.alert('Gasto cadastrado com sucesso.')</script>";
-    echo "<script type='text/javascript'>window.location='gastos.php'</script>";
+	 	echo "<script type='text/javascript'>window.alert('Pagamento cadastrado com sucesso.')</script>";
+    echo "<script type='text/javascript'>window.location='pagamentos.php'</script>";
 
 	 } else {
-	 	echo "<script type='text/javascript'>window.alert('Erro ao cadastrar o Gasto.')</script>";
-    echo "<script type='text/javascript'>window.location='gastos.php'</script>";
+	 	echo "<script type='text/javascript'>window.alert('Erro ao cadastrar o Pagamento.')</script>";
+    echo "<script type='text/javascript'>window.location='pagamentos.php'</script>";
 	 }         
     
 }
@@ -277,109 +291,14 @@ if (isset($_POST['btSalvar'])) {
 <?php 
 if (@$_GET['func'] == 'deleta') {
   $id = $_GET['id'];
-  // TABELA GASTOS
-  $query = "DELETE FROM gastos WHERE id = '{$id}' ";
+  // TABELA PAGAMENTOS
+  $query = "DELETE FROM pagamentos WHERE id = '{$id}' ";
   mysqli_query($conexao, $query);
   // TABELA MOVIMENTACOES
-  $query = "DELETE FROM movimentacoes WHERE movimento = 'Gasto' AND id_gasto = '{$id}' ";  
+  $query = "DELETE FROM movimentacoes WHERE movimento = 'Pagamento' AND id_gasto = '{$id}' ";  
   mysqli_query($conexao, $query);
 
-  echo "<script type='text/javascript'>window.location='gastos.php'</script>";
+  echo "<script type='text/javascript'>window.location='pagamentos.php'</script>";
   
 }
 ?>
-
-<!-- Alteração -->
-<?php 
-if (@$_GET['func'] == 'edita') {
-  $id = $_GET['id'];
-
-  $query  = "SELECT * FROM gastos WHERE id = '$id'";
-  $result = mysqli_query($conexao, $query);
-
-
-  while ($row = mysqli_fetch_array($result)) {
-
-  ?>
-
-    <!-- Modal -->
-      <div id="modalEditar" class="modal fade" role="dialog">
-        <!-- Form -->
-        <form method="POST">
-          <!-- Div Modal Dialog -->
-          <div class="modal-dialog">
-            <!-- Modal Content-->
-            <div class="modal-content">
-
-              <!-- Modal Header-->
-              <div class="modal-header">              
-                <h4 class="modal-title">Gastos</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-              </div>
-              <!-- Fim Modal Header -->
-
-              <!-- Modal Body -->
-              <div class="modal-body">
-
-                <div class="form-group">
-                  <label for="id_produto">Motivo</label>
-                  <input type="text" class="form-control mr-2" name="txtmotivo" id="txtmotivo" value="<?php echo $row['motivo'] ?>" placeholder="Nome" required>
-                </div>
-
-              </div>
-              <!-- Modal Body-->
-                     
-              <!-- Modal Footer -->
-              <div class="modal-footer">
-                 <button type="submit" class="btn btn-success mb-3" name="btEditar">Salvar </button>
-
-                  <button type="button" class="btn btn-danger mb-3" data-dismiss="modal">Cancelar </button>
-
-              </div>
-              <!-- Fim Modal Footer -->
-
-            </div>
-            <!-- Fim Modal Content-->
-          </div>
-          <!-- Fim Div Modal Dialog -->
-        </form>
-        <!-- Fim Form -->
-    </div>
-    <!-- Fim Modal -->
-
-
-
-<!-- Abre Janela Modal -->
-<script type="text/javascript">
-$(document).ready(function(){
-  // Show the Modal on load
-  $("#modalEditar").modal("show");    
- 
-});
-</script>
-
-<!-- Salvar os dados UPDATE -->
-<?php 
-
-if (isset($_POST['btEditar'])) {
-  $motivo = $_POST['txtmotivo'];
-  
-  $query = "UPDATE gastos
-            SET motivo     = '{$motivo}'  
-            WHERE id = '{$id}'";
-
-  $result = mysqli_query($conexao, $query);
-
-  if ($result) {
-    echo "<script type='text/javascript'>window.alert('Gasto alterado com sucesso.')</script>";
-    echo "<script type='text/javascript'>window.location='gastos.php'</script>";
-  } else {
-    echo "<script type='text/javascript'>window.alert('Erro ao alterar registro.')</script>";
-    echo "<script type='text/javascript'>window.location='gastos.php'</script>";
-  }
-  
-}
-
-?>
-
-<?php } } ?> 
