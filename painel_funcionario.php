@@ -56,6 +56,12 @@ require 'verificar_login.php';
             </a>
           </li>
           <li>
+            <a href="produtos.php">
+              <i class="nc-icon nc-diamond"></i>
+              <p>Produtos</p>
+            </a>
+          </li>
+          <li>
             <a href="abrir_orcamentos.php">
               <i class="nc-icon nc-diamond"></i>
               <p>Abrir Orçamento</p>

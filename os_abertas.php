@@ -135,7 +135,7 @@ $tecnico = $_SESSION['nome_usuario'];
                             <td><?php echo number_format($row['valor_total'], 2, ',', '.'); ?></td>
                             <td><?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?></td>         
                             <td>
-                              <a class="btn btn-info" href="os_abertas.php?func=edita&id=<?php echo $row['id'] ?>" onclick="return confirm('Confirma o fechamento da O.S ?')">
+                              <a class="btn btn-info" href="os_abertas.php?func=edita&id=<?php echo $row['id'] ?>&valor=<?php echo $row['valor_total'] ?>" onclick="return confirm('Confirma o fechamento da O.S ?')">
                                 <i class="fas fa-check-circle"></i>
                               </a>
                            
@@ -192,8 +192,25 @@ if (@$_GET['func'] == 'deleta') {
 <?php 
 if (@$_GET['func'] == 'edita') {
   $id = $_GET['id'];
+  $valor = $_GET['valor'];
+  
   $query  = "UPDATE os SET data_fechamento = curDate(), status = 'Fechada' WHERE id = '{$id}' ";
   mysqli_query($conexao, $query);
+
+  // Inserir no banco movimentacoes
+   $query_mov = "INSERT INTO 
+                movimentacoes (tipo, movimento, valor, funcionario, data, id_gasto) 
+                VALUES (
+                          'Entrada', 
+                          'Servico', 
+                          '{$valor}', 
+                          '{$tecnico}', 
+                          curdate(), 
+                          '{$id}'
+                        )";
+
+    mysqli_query($conexao, $query_mov);
+
   echo "<script type='text/javascript'>window.location='os_abertas.php'</script>";
 
 }
