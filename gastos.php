@@ -107,6 +107,8 @@ require 'conexao.php';
 
                       <?php
 
+                        $total = 0;
+
                         if ( isset($_GET['btPesquisar']) && $_GET['txtPesquisar'] != '' ) {
                           $data = $_GET['txtPesquisar'];
                           $query = "SELECT * FROM gastos WHERE data = '{$data}'ORDER BY id ASC";
@@ -119,6 +121,8 @@ require 'conexao.php';
 
                         while ($row = mysqli_fetch_assoc($result)) {
                           
+                          $total += $row['valor'];
+
                         ?>
 
                           <tr>
@@ -156,6 +160,15 @@ require 'conexao.php';
         <!-- Fim Div Row -->
       </div>
       <!-- Div Content -->
+
+      <!-- TOTALIZADOR -->
+      <div class="row">
+        <div class="col-md-12 mt-2">
+          <p>
+            Total: R$ <?php echo number_format($total, 2, ',', '.'); ?>
+          </p>
+        </div>
+      </div>
 
     <!-- Modal -->
       <div id="modalExemplo" class="modal fade" role="dialog">

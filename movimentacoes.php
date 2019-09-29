@@ -171,6 +171,7 @@ require 'conexao.php';
                           ?>
 
                           <tr>
+
                             <?php if ($row['tipo'] == 'Entrada'): ?>
                               <td class="entrada"><?php echo $row['tipo']; ?>                           
                               </td>
@@ -179,15 +180,10 @@ require 'conexao.php';
                               <td class="saida"><?php echo $row['tipo']; ?>                           
                               </td>
                               <?php $valor_saida += $row['valor']; ?>
-                            <?php endif; ?>
-                            <?php if ($row['tipo'] == 'Entrada'): ?>
-                              <td class="entrada"><?php echo $row['movimento']; ?>                         
-                              </td>
-                            <?php elseif ($row['tipo'] == 'Saida'): ?>
-                              <td class="saida"><?php echo $row['movimento']; ?>                         
-                              </td>
-                            <?php endif; ?>
-                            <td><?php echo number_format($row['valor'], 2, ',', '.'); ?></td>
+                            <?php endif; ?> 
+
+                            <td><?php echo $row['movimento']; ?></td>
+                            <td style="text-align: left"><?php echo number_format($row['valor'], 2, ',', '.'); ?></td>
                             <td><?php echo $row['funcionario']; ?></td>
                             <td><?php echo date('d/m/Y', strtotime($row['data'])); ?></td>      
 

@@ -52,7 +52,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
           </div>
         </a>
         <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-          SysTec Freitas
+          SysTec Micropoint
           <!-- <div class="logo-image-big">
             <img src="../assets/img/logo-big.png">
           </div> -->
@@ -91,17 +91,15 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
             </a>
           </li>
           <li>
-            <a href="./notifications.html">
+            <a href="#" data-toggle="modal" data-target="#modalMov">
               <i class="nc-icon nc-bell-55"></i>
-              <p>Notifications</p>
+              <p>Rel. Movimentações</p>
             </a>
           </li>
-          
-          
           <li>
-            <a href="./typography.html">
+            <a href="#" data-toggle="modal" data-target="#modalGastos">
               <i class="nc-icon nc-caps-small"></i>
-              <p>Typography</p>
+              <p>Relatório de Gastos</p>
             </a>
           </li>
           <li class="active-pro">
@@ -422,7 +420,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
           <!-- Modal Header -->
           <div class="modal-header">
             <!-- Modal Title -->
-            <h4 class="modal-title">Relatório de Ordens de Srviço</h4>
+            <h4 class="modal-title">Relatório de Ordens de Serviço</h4>
             <button class="close" type="button" data-dismiss="modal">
               &times;
             </button>
@@ -458,9 +456,9 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               <div class="col-md-4 mt-2">
                 <select class="form-control" id="category" name="status">
                   <option value="Todas">Todas</option>
-                  <option value="Aberta">Aberta</option>
-                  <option value="Fechada">Fechada</option>
-                  <option value="Cancelada">Cancelada</option>
+                  <option value="Aberta">Abertas</option>
+                  <option value="Fechada">Fechadas</option>
+                  <option value="Cancelada">Canceladas</option>
                 </select>
               </div>
               <!-- Fim Col Status -->
@@ -498,6 +496,94 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
     <!-- Fim Form -->
   </div>
   <!-- Fim Modal OS -->
+
+  <!-- Modal Movimentações -->
+  <div class="modal fade" id="modalMov" role="dialog">
+    <!-- Form -->
+    <form method="POST" action="rel/rel_mov_data_class.php">
+      <!-- Modal Dialog -->
+      <div class="modal-dialog modal-lg">
+        <!-- Modal Content -->
+        <div class="modal-content">
+          
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <!-- Modal Title -->
+            <h4 class="modal-title">Relatório de Movimentações</h4>
+            <button class="close" type="button" data-dismiss="modal">
+              &times;
+            </button>
+            <!-- Fim Modal Title -->
+          </div>
+          <!-- Fim Modal Header -->
+
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <!-- Row 1 -->
+            <div class="row">
+              <!-- Col Status -->
+              <div class="col-md-4">
+                 <label>Status</label>
+              </div>
+              <!-- Fim Col Status -->
+              <!-- Col Data Inicial -->
+              <div class="col-md-4">
+                <label>Data Inicial</label>
+              </div>
+              <!-- Fim Col Data Inicial -->
+              <!-- Col Data Final -->
+                <div class="col-md-4">
+                  <label>Data Final</label>
+                </div>
+                <!-- Fim Col Data Inicial -->
+              </div>
+              <!-- Fim Row 1 -->
+
+            <!-- Row 2 -->
+            <div class="row">
+              <!-- Col Status -->
+              <div class="col-md-4 mt-2">
+                <select class="form-control" id="category" name="tipo">
+                  <option value="Todas">Todas</option>
+                  <option value="Entrada">Entradas</option>
+                  <option value="Saida">Saidas</option>                
+                </select>
+              </div>
+              <!-- Fim Col Status -->
+              <!-- Col Data Inicial -->
+              <div class="col-md-4 mt-2">
+                <input class="form-control" type="date" name="txtDataInicial">
+              </div>
+              <!-- Fim Col Data Inicial -->
+              <!-- Col Data Final -->
+              <div class="col-md-4 mt-2">
+                <input class="form-control" type="date" name="txtDataFinal">
+              </div>
+              <!-- Fim Col Data Inicial -->
+            </div>
+            <!-- Fim Row 2 -->
+          </div>
+          <!-- Fim Modal Body -->
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button class="btn btn-success mb-3" type="submit" name="btnOK">
+              OK
+            </button>
+            <button class="btn btn-danger mb-3" type="button" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+          <!-- Fim Modal Footer -->
+
+        </div>
+        <!-- Fim Modal Content -->
+      </div>
+      <!-- Fim Modal Dialog -->
+    </form>
+    <!-- Fim Form -->
+  </div>
+  <!-- Fim Modal Movimentações -->
 
 </body>
 </html>
