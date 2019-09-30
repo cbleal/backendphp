@@ -6,8 +6,7 @@ require '../conexao.php';
 // pegar os parâmetros passados por GET (rel_mov_data_class.php)
 
 $dataInicial = $_GET['dataInicial'];
-$dataFinal 	 = $_GET['dataFinal'];
-$tipo	 	 = $_GET['tipo'];	
+$dataFinal 	 = $_GET['dataFinal'];	
 
 ?>
 
@@ -99,10 +98,10 @@ $tipo	 	 = $_GET['tipo'];
 	<div class="container">
 
 		<div class="row">
-			<!--<div class="col-sm-6">
-				<big><big> RELATÓRIO DE ORÇAMENTOS  </big> </big>
-			</div>-->
 			<div class="col-sm-6">
+				<big><big> RELATÓRIO DE GASTOS  </big> </big>
+			</div>
+			<!--<div class="col-sm-6">
 				<small>
 					<?php 
 						if ($tipo == 'Todas'){
@@ -112,7 +111,7 @@ $tipo	 	 = $_GET['tipo'];
 						}
 				 	?>				 	
 				 </small>
-			</div>
+			</div>-->
 		</div>
 		
 		<div class="row">
@@ -132,21 +131,9 @@ $tipo	 	 = $_GET['tipo'];
 
 		<?php 
 
-			$total_mov 		= 0;
-			$quant 			= 0;			
-			$quant_entradas = 0;
-			$quant_saidas 	= 0;
-			$total_entradas = 0;
-			$total_saidas 	= 0;
-			
-			if ( $tipo != 'Todas' ) {   // SE ESCOLHER O STATUS
+			$total = 0;
 
-				$query = "SELECT * FROM movimentacoes WHERE data BETWEEN '{$dataInicial}' AND '{$dataFinal}' AND tipo = '{$tipo}' ORDER BY data";
-
-			} else { // SENÃO
-
-				$query = "SELECT * FROM movimentacoes WHERE data BETWEEN '{$dataInicial}' AND '{$dataFinal}' ORDER BY data";
-			}
+			$query = "SELECT * FROM gastos WHERE data BETWEEN '{$dataInicial}' AND '{$dataFinal}' ORDER BY data";
 
 			$result = mysqli_query($conexao, $query);
 
@@ -154,34 +141,21 @@ $tipo	 	 = $_GET['tipo'];
 
 			<table class="table">
 				<tr bgcolor="#f9f9f9">
-					<td style="font-size:12px"> <b>Tipo</b> </td>
-					<td style="font-size:12px"> <b>Movimento</b> </td>
+					<td style="font-size:12px"> <b>Motivo</b> </td>
 					<td style="font-size:12px"> <b>Valor R$</b> </td>
 					<td style="font-size:12px"> <b>Funcionário</b> </td>
 					<td style="font-size:12px"> <b>Data</b> </td>	
 				</tr>
 
 				<?php
-				while ($row = mysqli_fetch_assoc($result)) {	
+				while ($row = mysqli_fetch_assoc($result)) {
 					
-					$total_mov += $row['valor'];				
-	                $quant += 1;
-
-	                if($row['tipo'] == 'Entrada'){
-	                    $quant_entradas += 1;
-	                    $total_entradas += $row['valor'];
-	                }
-
-	                if($row['tipo'] == 'Saida'){
-	                    $quant_saidas += 1;
-	                    $total_saidas += $row['valor'];
-	                }               
+					$total += $row['valor'];	
 	                
-					?>
+				?>
 
-				<tr>
-					<td style="font-size:12px"> <?php echo $row['tipo']; ?> </td>
-					<td style="font-size:12px"> <?php echo $row['movimento']; ?> </td>
+				<tr>					
+					<td style="font-size:12px"> <?php echo $row['motivo']; ?> </td>
 					<td style="font-size:12px"> <?php echo number_format($row['valor'], 2, ',', '.'); ?> </td>
 					<td style="font-size:12px"> <?php echo $row['funcionario']; ?> </td>	
 					<td style="font-size:12px"> <?php echo date('d/m/Y', strtotime($row['data'])); ?> </td>	
@@ -191,57 +165,24 @@ $tipo	 	 = $_GET['tipo'];
 			</table>
 
 			<hr><br><br>
+			
+			<div class="row">
 
-		<?php 
-
-			if ($tipo == 'Todas'):
-				?>
-
-				<div class="row">
-					<div class="col-sm-6">
-
-					</div>
-					<div class="col-sm-4 areaTotais">					
-						<p class="pgto" style="font-size:12px">  
-							<b>Qtde Entradas: </b> 
-							<?php echo $quant_entradas; ?>
-							<b> - Total : R$ </b> 
-							<?php echo number_format($total_entradas, 2, ',', '.'); ?> 
-						</p>
-						<p class="pgto" style="font-size:12px">  
-							<b>Qtde Saídas: </b> 
-							<?php echo $quant_saidas; ?> 
-							<b> - Total : R$ </b> 
-							<?php echo number_format($total_saidas, 2, ',', '.'); ?> 
-						</p>								
-					</div>
-
-				</div>
-
-			<?php else:
-			?>
-				<div class="row">
-					<div class="col-sm-8">	
+				<div class="col-sm-8">	
 									
-					</div>
-					<div class="col-sm-4 areaTotais">				
-						 <p class="pgto" style="font-size:16px">  
-						 	<b>Valor Total: </b> R$ 
-						 	<?php echo number_format($total_mov, 2, ',', '.'); ?> 
-						 </p>
-						 <p style="font-size:16px">  
-							<b>Qtde de Movimentos: </b> 
-							<?php echo $quant; ?> 
-						</p>					
-					</div>
 				</div>
 
-			<?php endif ?>		
+				<div class="col-sm-4 areaTotais">				
+					<p class="pgto" style="font-size:16px">  
+						<b>Valor Total: </b> R$ 
+						<?php echo number_format($total, 2, ',', '.'); ?> 
+					</p>				
+				</div>
+
+			</div>
 
 	</div>
 	<!-- Fim Div Container  -->
-
-	
 
 	<div class="footer">
  		<p style="font-size:12px" align="center">Desenvolvido por Claudinei B Leal - CBLInf</p> 

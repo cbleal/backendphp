@@ -81,13 +81,13 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
           <li>
             <a href="#" data-toggle="modal" data-target=#modalOrc>
               <i class="nc-icon nc-diamond"></i>
-              <p>Relatório Orçamentos</p>
+              <p>Rel. Orçamentos</p>
             </a>
           </li>
           <li>
             <a href="#" data-toggle="modal" data-target="#modalOS">
               <i class="nc-icon nc-pin-3"></i>
-              <p>Relatório de O.S.</p>
+              <p>Rel. O.S.</p>
             </a>
           </li>
           <li>
@@ -99,7 +99,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
           <li>
             <a href="#" data-toggle="modal" data-target="#modalGastos">
               <i class="nc-icon nc-caps-small"></i>
-              <p>Relatório de Gastos</p>
+              <p>Rel. Gastos</p>
             </a>
           </li>
           <li class="active-pro">
@@ -584,6 +584,94 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
     <!-- Fim Form -->
   </div>
   <!-- Fim Modal Movimentações -->
+
+  <!-- Modal Gastos -->
+  <div class="modal fade" id="modalGastos" role="dialog">
+    <!-- Form -->
+    <form method="POST" action="rel/rel_gastos_data_class.php">
+      <!-- Modal Dialog -->
+      <div class="modal-dialog">
+        <!-- Modal Content -->
+        <div class="modal-content">
+          
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <!-- Modal Title -->
+            <h4 class="modal-title">Relatório de Gastos</h4>
+            <button class="close" type="button" data-dismiss="modal">
+              &times;
+            </button>
+            <!-- Fim Modal Title -->
+          </div>
+          <!-- Fim Modal Header -->
+
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <!-- Row 1 -->
+            <div class="row">
+              <!-- Col Status -->
+              <!--<div class="col-md-4">
+                 <label>Status</label>
+              </div>-->
+              <!-- Fim Col Status -->
+              <!-- Col Data Inicial -->
+              <div class="col-md-4">
+                <label>Data Inicial</label>
+              </div>
+              <!-- Fim Col Data Inicial -->
+              <!-- Col Data Final -->
+                <div class="col-md-4">
+                  <label>Data Final</label>
+                </div>
+                <!-- Fim Col Data Inicial -->
+              </div>
+              <!-- Fim Row 1 -->
+
+            <!-- Row 2 -->
+            <div class="row">
+              <!-- Col Status -->
+              <!--<div class="col-md-4 mt-2">
+                <select class="form-control" id="category" name="tipo">
+                  <option value="Todas">Todas</option>
+                  <option value="Entrada">Entradas</option>
+                  <option value="Saida">Saidas</option>                
+                </select>
+              </div>-->
+              <!-- Fim Col Status -->
+              <!-- Col Data Inicial -->
+              <div class="col-md-4 mt-2">
+                <input class="form-control" type="date" name="txtDataInicial">
+              </div>
+              <!-- Fim Col Data Inicial -->
+              <!-- Col Data Final -->
+              <div class="col-md-4 mt-2">
+                <input class="form-control" type="date" name="txtDataFinal">
+              </div>
+              <!-- Fim Col Data Inicial -->
+            </div>
+            <!-- Fim Row 2 -->
+          </div>
+          <!-- Fim Modal Body -->
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button class="btn btn-success mb-3" type="submit" name="btnOK">
+              OK
+            </button>
+            <button class="btn btn-danger mb-3" type="button" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+          <!-- Fim Modal Footer -->
+
+        </div>
+        <!-- Fim Modal Content -->
+      </div>
+      <!-- Fim Modal Dialog -->
+    </form>
+    <!-- Fim Form -->
+  </div>
+  <!-- Fim Modal Gastos -->
 
 </body>
 </html>
