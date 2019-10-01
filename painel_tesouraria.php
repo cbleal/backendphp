@@ -19,8 +19,40 @@ $query  = "SELECT SUM(valor) AS total, COUNT(*) AS qtde FROM
           AND movimento = 'Servico' ";
 $result = mysqli_query($conexao, $query);
 $row    = mysqli_fetch_assoc($result);
-$total  = number_format($row['total'], 2, ',', '.');
-$qtde   = $row['qtde'];
+$total_mov  = number_format($row['total'], 2, ',', '.');
+$qtde_mov   = $row['qtde'];
+
+// CONSULTA AO BANCO VENDAS (TOTALIZA VALOR E QTDE REGISTROS)
+$query  = "SELECT SUM(valor) AS total, COUNT(*) AS qtde FROM 
+          vendas WHERE data = curdate() 
+          AND status = 'Efetuada' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$total_ven  = number_format($row['total'], 2, ',', '.');
+$qtde_ven   = $row['qtde'];
+
+// CONSULTA AO BANCO GASTOS (TOTALIZA VALOR E QTDE REGISTROS)
+$query  = "SELECT SUM(valor) AS total, COUNT(*) AS qtde FROM 
+          gastos WHERE data = curdate() ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$total_gas  = number_format($row['total'], 2, ',', '.');
+$qtde_gas   = $row['qtde'];
+
+// CONSULTA AO BANCO MOVIMENTACOES (TOTALIZA VALOR POR ENTRADA E SAIDA)
+$query_ent = "SELECT SUM(valor) AS total_entradas 
+              FROM movimentacoes WHERE data = curdate()
+              AND tipo = 'Entrada' ";
+$result_ent = mysqli_query($conexao, $query_ent);
+$row_ent    = mysqli_fetch_assoc($result_ent);
+
+$query_sai = "SELECT SUM(valor) AS total_saidas 
+              FROM movimentacoes WHERE data = curdate()
+              AND tipo = 'Saida' ";
+$result_sai = mysqli_query($conexao, $query_sai);
+$row_sai    = mysqli_fetch_assoc($result_sai);
+
+$saldo  = number_format($row_ent['total_entradas'] - $row['total_saidas'], 2, ',', '.');
 
 ?>
 
@@ -168,8 +200,9 @@ $qtde   = $row['qtde'];
                   <div class="col-7 col-md-8">
                     <div class="numbers">
                       <p class="card-category">Serviços</p>
-                      <p class="card-title"><small><?php echo $total ?></small>
-                        <p>
+                      <p class="card-title">
+                        <small><?php echo $total_mov; ?></small>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -177,7 +210,8 @@ $qtde   = $row['qtde'];
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Total Serviços: <?php echo $qtde ?>
+                  <i class="fa fa-refresh"></i> 
+                  Total Serviços: <?php echo $qtde_mov; ?>
                 </div>
               </div>
             </div>
@@ -193,9 +227,10 @@ $qtde   = $row['qtde'];
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Revenue</p>
-                      <p class="card-title">$ 1,345
-                        <p>
+                      <p class="card-category">Vendas</p>
+                      <p class="card-title">
+                        <?php echo $total_ven; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -203,7 +238,8 @@ $qtde   = $row['qtde'];
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
+                  <i class="fa fa-calendar-o"></i> 
+                  Total Vendas: <?php echo $qtde_ven; ?>
                 </div>
               </div>
             </div>
@@ -214,14 +250,15 @@ $qtde   = $row['qtde'];
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-vector text-danger"></i>
+                      <i class="nc-icon nc-money-coins text-danger"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Errors</p>
-                      <p class="card-title">23
-                        <p>
+                      <p class="card-category">Gastos</p>
+                      <p class="card-title">
+                        <?php echo $total_gas; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -229,7 +266,8 @@ $qtde   = $row['qtde'];
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-clock-o"></i> In the last hour
+                  <i class="fa fa-clock-o"></i> 
+                  Total Gastos: <?php echo $qtde_gas; ?>
                 </div>
               </div>
             </div>
@@ -240,14 +278,17 @@ $qtde   = $row['qtde'];
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-favourite-28 text-primary"></i>
+                      <i class="nc-icon nc-bank text-primary"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Followers</p>
-                      <p class="card-title">+45K
-                        <p>
+                      <p class="card-category">Saldo Diário:</p>
+
+                      <p class="card-title">
+                        <?php echo $saldo; ?>
+                      <p>
+
                     </div>
                   </div>
                 </div>

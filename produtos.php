@@ -245,7 +245,7 @@ if (isset($_POST['btSalvar'])) {
 	}
 
 	 // Inserir no banco
-	$query  = "INSERT INTO produtos (nome, unidade, valor, data) VALUES ('{$nome}', '{$unidade}', '{$valor}', curdate() )";
+	$query  = "INSERT INTO produtos (nome, unidade, valor_compra, data) VALUES ('{$nome}', '{$unidade}', '{$valor}', curdate() )";
 
 	$result = mysqli_query($conexao, $query);
 	
