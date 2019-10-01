@@ -22,10 +22,9 @@ $tipo	 	 = $_GET['tipo'];
 
 	<style>
 
-	 @page {
-	            margin: 0px;
-
-	        }
+	@page {
+	    margin: 0px;
+	}
 
 	.footer {
 	    position:absolute;
@@ -49,7 +48,7 @@ $tipo	 	 = $_GET['tipo'];
 		border : 0.5px solid #bcbcbc;
 		padding: 15px;
 		border-radius: 5px;
-		margin-right:25px;
+		
 	}
 
 	.areaTotal{
@@ -99,10 +98,12 @@ $tipo	 	 = $_GET['tipo'];
 	<div class="container">
 
 		<div class="row">
-			<!--<div class="col-sm-6">
-				<big><big> RELATÓRIO DE ORÇAMENTOS  </big> </big>
-			</div>-->
-			<div class="col-sm-6">
+			<div class="col-sm-12">
+				<big><big> RELATÓRIO DE MOVIMENTAÇÕES  </big> </big>
+			</div>			
+		</div>
+		<div class="row">			
+			<div class="col-sm-3">
 				<small>
 					<?php 
 						if ($tipo == 'Todas'){
@@ -197,10 +198,9 @@ $tipo	 	 = $_GET['tipo'];
 			if ($tipo == 'Todas'):
 				?>
 
+				<!-- Div Row 1 -->
 				<div class="row">
-					<div class="col-sm-6">
-
-					</div>
+					
 					<div class="col-sm-4 areaTotais">					
 						<p class="pgto" style="font-size:12px">  
 							<b>Qtde Entradas: </b> 
@@ -208,40 +208,47 @@ $tipo	 	 = $_GET['tipo'];
 							<b> - Total : R$ </b> 
 							<?php echo number_format($total_entradas, 2, ',', '.'); ?> 
 						</p>
+					
 						<p class="pgto" style="font-size:12px">  
 							<b>Qtde Saídas: </b> 
 							<?php echo $quant_saidas; ?> 
 							<b> - Total : R$ </b> 
 							<?php echo number_format($total_saidas, 2, ',', '.'); ?> 
+						</p>
+
+						<p class="pgto" style="font-size:12px">  	
+							<b>Saldo: R$ </b> 
+							<?php echo number_format(($total_entradas - $total_saidas), 2, ',', '.'); ?> 
 						</p>								
 					</div>
 
 				</div>
+				<!-- Fim Div Row 1 -->
 
 			<?php else:
 			?>
+				<!-- Div Row 1 -->
 				<div class="row">
-					<div class="col-sm-8">	
+					<!--<div class="col-sm-8">	
 									
-					</div>
+					</div>-->
 					<div class="col-sm-4 areaTotais">				
-						 <p class="pgto" style="font-size:16px">  
+						 <p class="pgto" style="font-size:12px">  
 						 	<b>Valor Total: </b> R$ 
 						 	<?php echo number_format($total_mov, 2, ',', '.'); ?> 
-						 </p>
-						 <p style="font-size:16px">  
+						 </p>	
+						 <p style="font-size:12px">  
 							<b>Qtde de Movimentos: </b> 
 							<?php echo $quant; ?> 
 						</p>					
 					</div>
 				</div>
+				<!-- Fim Div Row 1 -->
 
 			<?php endif ?>		
 
 	</div>
 	<!-- Fim Div Container  -->
-
-	
 
 	<div class="footer">
  		<p style="font-size:12px" align="center">Desenvolvido por Claudinei B Leal - CBLInf</p> 

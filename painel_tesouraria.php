@@ -1,5 +1,6 @@
 <?php 
 
+require 'conexao.php';
 require 'verificar_login.php';
 
 // verificação de cargo logado
@@ -11,6 +12,15 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
 		header("Location: index.php");
 		exit;		
 }
+
+// CONSULTA AO BANCO MOVIMENTACOES (TOTALIZA VALOR E QTDE REGISTROS)
+$query  = "SELECT SUM(valor) AS total, COUNT(*) AS qtde FROM 
+          movimentacoes WHERE data = curdate() 
+          AND movimento = 'Servico' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$total  = number_format($row['total'], 2, ',', '.');
+$qtde   = $row['qtde'];
 
 ?>
 
@@ -118,7 +128,18 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="logout.php">Sair</a>             
+                  <a class="dropdown-item" href="logout.php">Sair</a>
+
+                  <?php 
+
+                    if($_SESSION['cargo_usuario'] == 'Administrador' || $_SESSION['cargo_usuario'] == 'Gerente'):
+
+                  ?>
+                        <a class="dropdown-item" href="painel_admin.php">Painel do Administrador</a>
+                        <a class="dropdown-item" href="painel_tesouraria.php">Painel da Tesouraria</a>
+
+                  <?php endif; ?>
+
                 </div>
               </li>
              
@@ -146,8 +167,8 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Capacity</p>
-                      <p class="card-title">150GB
+                      <p class="card-category">Serviços</p>
+                      <p class="card-title"><small><?php echo $total ?></small>
                         <p>
                     </div>
                   </div>
@@ -156,7 +177,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Update Now
+                  <i class="fa fa-refresh"></i> Total Serviços: <?php echo $qtde ?>
                 </div>
               </div>
             </div>

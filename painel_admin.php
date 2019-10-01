@@ -615,12 +615,12 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               </div>-->
               <!-- Fim Col Status -->
               <!-- Col Data Inicial -->
-              <div class="col-md-4">
+              <div class="col-6">
                 <label>Data Inicial</label>
               </div>
               <!-- Fim Col Data Inicial -->
               <!-- Col Data Final -->
-                <div class="col-md-4">
+                <div class="col-6">
                   <label>Data Final</label>
                 </div>
                 <!-- Fim Col Data Inicial -->
@@ -639,12 +639,12 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               </div>-->
               <!-- Fim Col Status -->
               <!-- Col Data Inicial -->
-              <div class="col-md-4 mt-2">
+              <div class="col-6 mt-2">
                 <input class="form-control" type="date" name="txtDataInicial">
               </div>
               <!-- Fim Col Data Inicial -->
               <!-- Col Data Final -->
-              <div class="col-md-4 mt-2">
+              <div class="col-6 mt-2">
                 <input class="form-control" type="date" name="txtDataFinal">
               </div>
               <!-- Fim Col Data Inicial -->
