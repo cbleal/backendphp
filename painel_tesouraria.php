@@ -52,7 +52,14 @@ $query_sai = "SELECT SUM(valor) AS total_saidas
 $result_sai = mysqli_query($conexao, $query_sai);
 $row_sai    = mysqli_fetch_assoc($result_sai);
 
-$saldo  = number_format($row_ent['total_entradas'] - $row['total_saidas'], 2, ',', '.');
+$saldo  = number_format($row_ent['total_entradas'] - $row_sai['total_saidas'], 2, ',', '.');
+
+// CONSULTA AO BANCO MOVIMENTACOES (QUANTIDADE DE REGISTROS)
+$query = "SELECT COUNT(*) AS num_mov FROM movimentacoes 
+              WHERE data = curdate()";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$num_mov = $row['num_mov'];
 
 ?>
 
@@ -286,7 +293,14 @@ $saldo  = number_format($row_ent['total_entradas'] - $row['total_saidas'], 2, ',
                       <p class="card-category">Saldo Diário:</p>
 
                       <p class="card-title">
-                        <?php echo $saldo; ?>
+                        <?php 
+                          if ( $saldo >= 0 ) { 
+                            echo '<font color="green">'.$saldo.' </font>';
+                          } else {
+                            echo '<font color="red">'.$saldo.' </font>';
+                          }
+
+                        ?>                    
                       <p>
 
                     </div>
@@ -296,14 +310,73 @@ $saldo  = number_format($row_ent['total_entradas'] - $row['total_saidas'], 2, ',
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Update now
+                  <i class="fa fa-refresh"></i> 
+                  <a href="movimentacoes.php">
+                    Total Mov: <?php echo $num_mov; ?> 
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
 
+
+        <p class="mt-5">ÚLTIMAS MOVIMENTAÇÕES</p>
+        <hr >
+
+        <div class="row">
+
+          <?php 
+
+           $query = "SELECT * FROM movimentacoes 
+                    WHERE data >= curDate() LIMIT 4";
+
+            $result = mysqli_query($conexao, $query);
+            $row = mysqli_num_rows($result);
+
+            if($row == '') {
+
+              echo "<h5> Não existem movimentações Hoje!! </h5>";
+                        
+            } else {
+
+              while($res_1 = mysqli_fetch_array($result)){
+                $tipo = $res_1["tipo"];
+                $movimento = $res_1["movimento"];
+                $valor = $res_1["valor"];
+                $funcionario = $res_1["funcionario"];
+           
+             if($tipo == 'Entrada'): 
+
+             ?>         
+
+              <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+                  <div class="card-header" style="font-size: 16px"><?php echo $movimento; ?></div>
+                  <div class="card-body">
+                    <h5 class="card-title">R$ <?php echo $valor; ?></h5>
+                    <p class="card-text"><?php echo $funcionario; ?></p>
+                  </div>
+                </div>
+              </div>
+
+            <?php else: ?>
+
+              <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+                  <div class="card-header" style="font-size: 16px"><?php echo $movimento; ?></div>
+                  <div class="card-body">
+                    <h5 class="card-title">R$ <?php echo $valor; ?></h5>
+                    <p class="card-text"><?php echo $funcionario; ?></p>
+                  </div>
+                </div>
+              </div>
+
+            <?php endif; ?>
+            
+          <?php } } ?>
+
+        </div>
 
       <footer class="footer footer-black  footer-white ">
         <div class="container-fluid">
