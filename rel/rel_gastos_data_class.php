@@ -1,5 +1,7 @@
 <?php 
 
+require_once '../config.php';
+
 // pegar os parâmetros passados por POST (painel_admin.php)
 $dataInicial = $_POST['txtDataInicial'];
 $dataFinal 	 = $_POST['txtDataFinal'];
@@ -22,7 +24,7 @@ use Dompdf\Dompdf;
 // instantiate and use the dompdf class
 $dompdf = new Dompdf();
 
-$dompdf->loadHtml(file_get_contents("http://localhost/backendphp/rel/rel_gastos_data.php?dataInicial=".$dataInicial."&dataFinal=".$dataFinal));
+$dompdf->loadHtml(file_get_contents($url."/rel/rel_gastos_data.php?dataInicial=".$dataInicial."&dataFinal=".$dataFinal));
 
 // (Optional) Setup the paper size and orientation
 $dompdf->setPaper('A4', 'portrait');

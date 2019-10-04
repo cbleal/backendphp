@@ -291,8 +291,10 @@ if (isset($_POST['btSalvar'])) {
                         )";
 
     mysqli_query($conexao, $query_mov);
-	
-	 
+
+    $query_pro = "UPDATE produtos SET valor_venda = '{$valor}' WHERE nome = '{$produto}'"; 
+    mysqli_query($conexao, $query_pro);
+
 	 	echo "<script type='text/javascript'>window.alert('Venda cadastrada com sucesso.')</script>";
     echo "<script type='text/javascript'>window.location='vendas.php'</script>";
 

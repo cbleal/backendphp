@@ -5,6 +5,8 @@
 // inclui o arquivo
 require 'verificar_login.php';
 
+require 'conexao.php';
+
 // verificação de cargo logado
 if ( $_SESSION['cargo_usuario'] != 'Administrador' && 
 		 $_SESSION['cargo_usuario'] != 'Gerente' ) {
@@ -102,12 +104,47 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               <p>Rel. Gastos</p>
             </a>
           </li>
-          <li class="active-pro">
-            <a href="./upgrade.html">
-              <i class="nc-icon nc-spaceship"></i>
-              <p>Upgrade to PRO</p>
-            </a>
-          </li>
+
+          <!--<?php if ($_SESSION['cargo_usuario'] == 'Administrador'):?>
+            
+                <li class="active-pro">
+                  <a href="#" data-toggle='modal' data-target='#modalDados'>
+                  <i class="nc-icon nc-spaceship"></i>
+                  <p>Excluir Dados</p>
+                  </a>
+                </li>
+
+          <?php endif; ?>-->
+
+          <?php 
+            if ($_SESSION['cargo_usuario'] == 'Administrador') {
+
+              ?>
+            
+              <?php 
+                $query = "SELECT * FROM backup WHERE data = curdate()";
+                $result = mysqli_query($conexao, $query);
+                $row = mysqli_num_rows($result);
+                if ($row > 0) {
+                  ?>
+                  <li class="active-pro">
+                    <a href="#" data-toggle='modal' data-target='#modalDados'>
+                    <i class="nc-icon nc-spaceship"></i>
+                    <p>Excluir Dados</p>
+                    </a>
+                  </li>
+                  <?php 
+                } else {
+                  ?>
+                    <li class="active-pro">
+                      <a href="#" data-toggle='modal' data-target='#modalMensagem'>
+                      <i class="nc-icon nc-spaceship"></i>
+                      <p>Excluir Dados</p>
+                      </a>
+                    </li>
+                   
+                <?php } } ?>
+       
         </ul>
       </div>
     </div>
@@ -131,6 +168,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
             <ul class="navbar-nav">
              
               <li class="nav-item btn-rotate dropdown">
+
                 <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 	<?php echo $_SESSION['nome_usuario']; ?>
                   <i class="nc-icon nc-bell-55"></i>
@@ -138,14 +176,16 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                     <span class="d-lg-none d-md-block">Some Actions</span>
                   </p>
                 </a>
+
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item" href="logout.php">Sair</a>
                   <a class="dropdown-item" href="painel_funcionario.php">Painel do Funcionario</a>
-                  <a class="dropdown-item" href="painel_tesouraria.php">Painel da Tesouraria</a>             
-
+                  <a class="dropdown-item" href="painel_tesouraria.php">Painel da Tesouraria</a>
+                  <a class="dropdown-item" href="backup.php">Backup</a>
                 </div>
+
               </li>
-             
+
             </ul>
           </div>
         </div>
@@ -264,8 +304,6 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
             </div>
           </div>
         </div>
-        
-
 
       <footer class="footer footer-black  footer-white ">
         <div class="container-fluid">
@@ -673,5 +711,211 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
   </div>
   <!-- Fim Modal Gastos -->
 
+  <!-- Modal Dados -->
+  <div class="modal fade" id="modalDados" role="dialog">
+    <!-- Form -->
+    <form method="POST" action="">
+      <!-- Modal Dialog -->
+      <div class="modal-dialog">
+        <!-- Modal Content -->
+        <div class="modal-content">
+          
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <!-- Modal Title -->
+            <h4 class="modal-title">Excluir Dados do Banco</h4>
+            <button class="close" type="button" data-dismiss="modal">
+              &times;
+            </button>
+            <!-- Fim Modal Title -->
+          </div>
+          <!-- Fim Modal Header -->
+
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <!-- Row 1 -->
+            <div class="row">              
+              <!-- Col Ano -->
+              <div class="col-12 ml-2">
+                <label>Ano</label>
+              </div>
+              <!-- Fim Col Ano -->              
+            </div>
+            <!-- Fim Row 1 -->
+
+            <!-- Row 2 -->
+            <div class="row">
+              <!-- Col Ano -->
+              <div class="col-md-6 mt-2">
+                <!-- PEGA O ANO ATUAL -->
+                <?php $ano = date('Y') ?>
+                <select class="form-control" id="category" name="ano">
+                  <?php 
+                    for ( $i = 1; $i <= 4; $i++) {
+                      ?>
+                      <option value=<?php echo $ano - $i ?> >
+                        <?php echo $ano - $i ?>                         
+                      </option>
+                      <?php
+                    }
+                  ?>                          
+                </select>
+              </div>
+              <!-- Fim Col Ano -->              
+            </div>
+            <!-- Fim Row 2 -->
+
+          </div>
+          <!-- Fim Modal Body -->
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button class="btn btn-success mb-3" type="submit" name="btnOK">
+              OK
+            </button>
+            <button class="btn btn-danger mb-3" type="button" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+          <!-- Fim Modal Footer -->
+
+        </div>
+        <!-- Fim Modal Content -->
+      </div>
+      <!-- Fim Modal Dialog -->
+    </form>
+    <!-- Fim Form -->
+  </div>
+  <!-- Fim Modal Dados -->
+
+<!-- EXCLUSÃO DADOS DO BANCO -->
+<?php 
+
+if (isset($_POST['btnOK'])) {
+
+  $ano = $_POST['ano'];
+  $data_ini = $ano.'-01-01';
+  $data_fim = $ano.'-12-31';
+
+  //EXCLUIR DADOS DAS VENDAS DO ANO ANTERIOR
+  $query = "DELETE FROM vendas 
+            WHERE data 
+            BETWEEN '{$data_ini}' 
+            AND '{$data_fim}'
+            ";
+  mysqli_query($conexao, $query);
+
+  //EXCLUIR DADOS DAS COMPRAS DO ANO ANTERIOR
+  $query = "DELETE FROM compras 
+            WHERE data 
+            BETWEEN '{$data_ini}' 
+            AND '{$data_fim}'
+            ";
+
+  mysqli_query($conexao, $query);
+
+  //EXCLUIR DADOS DAS MOVIMENTACOES DO ANO ANTERIOR
+  $query = "DELETE FROM movimentacoes 
+            WHERE data 
+            BETWEEN '{$data_ini}' 
+            AND '{$data_fim}'
+            ";
+
+  mysqli_query($conexao, $query);
+
+  //EXCLUIR DADOS DOS GASTOS DO ANO ANTERIOR
+  $query = "DELETE FROM gastos 
+            WHERE data 
+            BETWEEN '{$data_ini}' 
+            AND '{$data_fim}'
+            ";
+
+  mysqli_query($conexao, $query);
+
+  //EXCLUIR DADOS DOS PAGAMENTOS DO ANO ANTERIOR
+  $query = "DELETE FROM pagamentos 
+            WHERE data 
+            BETWEEN '{$data_ini}' 
+            AND '{$data_fim}'
+            ";
+
+  mysqli_query($conexao, $query);
+
+  //EXCLUIR DADOS DOS ORCAMENTOS DO ANO ANTERIOR
+  $query = "DELETE FROM orcamentos 
+            WHERE data_abertura 
+            BETWEEN '{$data_ini}' 
+            AND '{$data_fim}'
+            ";
+
+  mysqli_query($conexao, $query);
+
+  //EXCLUIR DADOS DAS OS DO ANO ANTERIOR
+  $query = "DELETE FROM os 
+            WHERE data_abertura 
+            BETWEEN '{$data_ini}' 
+            AND '{$data_fim}'
+            ";
+ 
+  mysqli_query($conexao, $query);
+
+  echo "<script type='text/javascript'>window.location='painel_admin.php'</script>";
+  
+}
+
+?>  
+
+  <!-- Modal Mensagem -->
+  <div class="modal fade" id="modalMensagem" role="dialog">
+    <!-- Form -->
+    <form method="POST" action="">
+      <!-- Modal Dialog -->
+      <div class="modal-dialog">
+        <!-- Modal Content -->
+        <div class="modal-content">
+          
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <!-- Modal Title -->
+            <h4 class="modal-title">Excluir Dados do Banco</h4>
+            <button class="close" type="button" data-dismiss="modal">
+              &times;
+            </button>
+            <!-- Fim Modal Title -->
+          </div>
+          <!-- Fim Modal Header -->
+
+          <!-- Modal Body -->
+          <div class="modal-body">
+            
+            <div class="row">
+              <div class="col-md-12">
+                <p>Faça antes o Backup dos Dados.</p>
+              </div>              
+            </div>
+
+          </div>
+          <!-- Fim Modal Body -->
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button class="btn btn-success mb-3" name="buttonOK">
+              OK
+            </button>           
+          </div>
+          <!-- Fim Modal Footer -->
+
+        </div>
+        <!-- Fim Modal Content -->
+      </div>
+      <!-- Fim Modal Dialog -->
+    </form>
+    <!-- Fim Form -->
+  </div>
+  <!-- Fim Modal Mensagem -->
+
 </body>
 </html>
+
+
+
