@@ -166,11 +166,11 @@ require 'conexao.php';
                               if ($row['status'] == 'Fechada'):
                                 ?>
                                 <td>
-                                  <a class="btn btn-info" href="rel/rel_os.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>">
+                                  <a class="btn btn-info" href="rel/rel_os.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>" data-toggle="tooltip" title="Imprimir">
                                     <i class="fas fa-print"></i>
                                   </a>
                            
-                                  <a class="btn btn-danger" href="abrir_orcamentos.php?func=deleta&id=<?php echo $row['id'] ?>">
+                                  <a class="btn btn-danger" href="abrir_orcamentos.php?func=deleta&id=<?php echo $row['id'] ?>" data-toggle="tooltip" title="Excluir OS">
                                     <i class="fas fa-trash-alt"></i>
                                   </a>
                                 </td>
@@ -180,11 +180,11 @@ require 'conexao.php';
                             ?>
                                   
                             <td>
-                              <a class="btn btn-secondary" href="#">
+                              <a class="btn btn-secondary" href="#" data-toggle="tooltip" title="Imprimir">
                                 <i class="fas fa-print"></i>
                               </a>
                            
-                              <a class="btn btn-danger" href="abrir_orcamentos.php?func=deleta&id=<?php echo $row['id'] ?>">
+                              <a class="btn btn-danger" href="abrir_orcamentos.php?func=deleta&id=<?php echo $row['id'] ?>" data-toggle="tooltip" title="Excluir OS">
                                 <i class="fas fa-trash-alt"></i>
                               </a>
                             </td>
@@ -303,7 +303,13 @@ require 'conexao.php';
   <!-- JQuery Mask -->
   <script type="text/javascript" src="js/jquery.mask.min.js"></script> 
   <!-- JavaScript JS -->
-  <script type="text/javascript" src="js/bootstrap.min.js"></script> 
+  <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script> 
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
 
 </body>
 </html>

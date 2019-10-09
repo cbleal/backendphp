@@ -1,11 +1,8 @@
 <?php 
 
-/* Função: Mostra o nome do usuário logado. */
-
-// inclui o arquivo
-require 'verificar_login.php';
-
 require 'conexao.php';
+
+require 'verificar_login.php';
 
 // verificação de cargo logado
 if ( $_SESSION['cargo_usuario'] != 'Administrador' && 
@@ -16,6 +13,44 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
 		exit;		
 }
 
+// CONSULTA AO BANCO ORCAMENTOS (TOTAL REGISTROS STATUS = ABERTO)
+$query = "SELECT COUNT(*) AS qtd 
+          FROM orcamentos 
+          WHERE status = 'Aberto' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$qtd_or = $row['qtd'];
+
+// CONSULTA AO BANCO OS (TOTAL REGISTROS STATUS = ABERTA)
+$query = "SELECT COUNT(*) AS qtd 
+          FROM os 
+          WHERE status = 'Aberta' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$qtd_os = $row['qtd'];
+
+// CONSULTA AO BANCO ORCAMENTOS (TOTAL REGISTROS STATUS = AGUARDANDO)
+$query = "SELECT COUNT(*) AS qtd 
+          FROM orcamentos 
+          WHERE status = 'Aguardando' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$qtd_ag = $row['qtd'];
+
+// CONSULTA AO BANCO MOVIMENTACOES (TOTALIZA VALOR POR ENTRADA E SAIDA)
+$query_ent = "SELECT SUM(valor) AS total_entradas 
+              FROM movimentacoes WHERE data = curdate()
+              AND tipo = 'Entrada' ";
+$result_ent = mysqli_query($conexao, $query_ent);
+$row_ent    = mysqli_fetch_assoc($result_ent);
+
+$query_sai = "SELECT SUM(valor) AS total_saidas 
+              FROM movimentacoes WHERE data = curdate()
+              AND tipo = 'Saida' ";
+$result_sai = mysqli_query($conexao, $query_sai);
+$row_sai    = mysqli_fetch_assoc($result_sai);
+
+$saldo  = number_format($row_ent['total_entradas'] - $row_sai['total_saidas'], 2, ',', '.');
 
 ?>
 
@@ -205,14 +240,15 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-globe text-warning"></i>
+                      <i class="nc-icon nc-single-copy-04 text-warning"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Capacity</p>
-                      <p class="card-title">150GB
-                        <p>
+                      <p class="card-category">Orcamentos</p>
+                      <p class="card-title">
+                        <?php echo $qtd_or; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -220,7 +256,8 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Update Now
+                  <i class="fa fa-refresh"></i> 
+                  Orcamentos Abertos 
                 </div>
               </div>
             </div>
@@ -231,14 +268,15 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-money-coins text-success"></i>
+                      <i class="nc-icon nc-vector text-success"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Revenue</p>
-                      <p class="card-title">$ 1,345
-                        <p>
+                      <p class="card-category">OS</p>
+                      <p class="card-title">
+                        <?php echo $qtd_os; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -246,7 +284,7 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
+                  <i class="fa fa-calendar-o"></i> OS Abertas
                 </div>
               </div>
             </div>
@@ -257,14 +295,15 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-vector text-danger"></i>
+                      <i class="nc-icon nc-email-85 text-danger"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Errors</p>
-                      <p class="card-title">23
-                        <p>
+                      <p class="card-category">Aprovacao</p>
+                      <p class="card-title">
+                        <?php echo $qtd_ag; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -272,7 +311,8 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-clock-o"></i> In the last hour
+                  <i class="fa fa-clock-o"></i> 
+                  Orcam. Aguardando
                 </div>
               </div>
             </div>
@@ -283,14 +323,22 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-favourite-28 text-primary"></i>
+                      <i class="nc-icon nc-money-coins text-primary"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Followers</p>
-                      <p class="card-title">+45K
-                        <p>
+                      <p class="card-category">Saldo Diario</p>
+                      <p class="card-title">
+                        <?php 
+                          if ( $saldo >= 0 ) { 
+                            echo '<font color="green">'.$saldo.' </font>';
+                          } else {
+                            echo '<font color="red">'.$saldo.' </font>';
+                          }
+
+                        ?>   
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -298,12 +346,86 @@ if ( $_SESSION['cargo_usuario'] != 'Administrador' &&
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Update now
+                  <i class="fa fa-refresh"></i> Valor Arrecadado Hoje
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+      <!-- LINHA -->
+      <div class="row">
+        <!-- COLUNA (col-md-6 = 50%) - dispositivos médios - largura da tela igual ou superior a 768 px -->
+        <div class="col-md-6">
+          <!-- MARGEM TOP = 5 -->
+          <p class="mt-5">ORÇAMENTOS ABERTOS</p>
+        </div>
+        <!-- COLUNA (col-md-6 = 50%) - dispositivos médios - largura da tela igual ou superior a 768 px -->
+        <div class="col-md-6">
+          <!-- MARGEM TOP = 5 -->
+          <p class="mt-5">OS ABERTAS</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Div Row Cards -->
+      <div class="row">
+
+      <!-- VERIFICAR ORÇAMENTOS ABERTOS -->
+      <?php 
+
+        $query  = "SELECT o.id, o.problema, o.data_abertura, f.nome FROM orcamentos AS o INNER JOIN funcionarios AS f ON f.id = o.tecnico WHERE o.status = 'Aberto'";
+        $result = mysqli_query($conexao, $query);
+        
+        while ($row = mysqli_fetch_assoc($result)) {
+
+          ?>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+              <div class="card-header" style="font-size: 16px">
+                <?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?>                  
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><?php echo $row['nome']; ?></h5>
+                <p class="card-text"><?php echo $row['problema']; ?></p>
+              </div>
+            </div>
+          </div>
+
+        <?php 
+          }
+        ?>
+      
+      <!-- VERIFICAR OS ABERTAS -->
+      <?php 
+
+        $query  = "SELECT ord.id, ord.produto, ord.data_abertura, f.nome FROM os AS ord INNER JOIN funcionarios AS f ON f.id = ord.tecnico WHERE ord.status = 'Aberta'";
+        $result = mysqli_query($conexao, $query);
+        
+        while ($row = mysqli_fetch_assoc($result)) {
+
+          ?>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+              <div class="card-header" style="font-size: 16px">
+                <?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?>                  
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><?php echo $row['nome']; ?></h5>
+                <p class="card-text"><?php echo $row['produto']; ?></p>
+              </div>
+            </div>
+          </div>
+
+        <?php 
+          }
+        ?>
+
+      </div>
+      <!-- Fim Div Row Cards -->
 
       <footer class="footer footer-black  footer-white ">
         <div class="container-fluid">
@@ -916,6 +1038,3 @@ if (isset($_POST['btnOK'])) {
 
 </body>
 </html>
-
-
-

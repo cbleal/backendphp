@@ -146,11 +146,11 @@ require 'conexao.php';
                             <td><?php echo $row['valor_total']; ?></td>
                             <td><?php echo date( 'd/m/Y', strtotime($row['data_abertura']) ); ?></td>         
                             <td>
-                              <a class="btn btn-info" href="rel/rel_orcamentos.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>">
+                              <a class="btn btn-info" href="rel/rel_orcamentos.php?id=<?php echo $row['id'] ?>&email=<?php echo $row['email'] ?>" data-toggle="tooltip" title="Imprimir">
                                 <i class="fas fa-print"></i>
                               </a>
                            
-                              <a class="btn btn-success" href="rel_orcamentos.php?func=edita&id=<?php echo $row['id'] ?>">
+                              <a class="btn btn-success" href="rel_orcamentos.php?func=edita&id=<?php echo $row['id'] ?>" data-toggle="tooltip" title="Aprovar Orçamento">
                                 <i class="fas fa-check-circle"></i>
                               </a>
                             </td>
@@ -185,7 +185,13 @@ require 'conexao.php';
   <!-- JQuery Mask -->
   <script type="text/javascript" src="js/jquery.mask.min.js"></script> 
   <!-- JavaScript JS -->
-  <script type="text/javascript" src="js/bootstrap.min.js"></script> 
+  <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script> 
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
 
 </body>
 </html>
@@ -236,7 +242,7 @@ if (@$_GET['func'] == 'edita') {
 
                 <div class="form-group">
                   <label for="id_produto">Desconto</label>
-                  <input type="text" class="form-control mr-2" name="txtdesconto" id="txtdesconto" placeholder="Desconto" required>
+                  <input type="text" class="form-control mr-2" name="txtdesconto" id="txtdesconto" placeholder="0,00" onkeypress="$(this).mask('#.##0,00', {reverse: true})" required>
                 </div>
 
               </div>

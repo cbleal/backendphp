@@ -128,7 +128,7 @@ require 'verificar_login.php';
                             <td><?php echo $row['problema']; ?></td>
                             <td><?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?></td>         
                             <td>
-                              <a class="btn btn-info" href="fechar_orcamentos.php?func=edita&id=<?php echo $row['id'] ?>">
+                              <a class="btn btn-info" href="fechar_orcamentos.php?func=edita&id=<?php echo $row['id'] ?>" data-toggle="tooltip" title="Fechar Orçamento">
                                 <i class="fas fa-pen-square"></i>
                               </a>
                            
@@ -168,7 +168,13 @@ require 'verificar_login.php';
   <!-- JQuery Mask -->
   <script type="text/javascript" src="js/jquery.mask.min.js"></script> 
   <!-- JavaScript JS -->
-  <script type="text/javascript" src="js/bootstrap.min.js"></script> 
+  <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script> 
+  <!-- JavaScript Function Tooltip -->
+  <script type="text/javascript">
+    $(document).ready( function() {
+      $( '[data-toggle="tooltip"]' ).tooltip();
+    });
+  </script>
 
 </body>
 </html>
@@ -199,7 +205,7 @@ if (@$_GET['func'] == 'edita') {
 
                 <div class="form-group">
                   <label for="id_produto">Valor Serviço</label>
-                  <input type="text" class="form-control mr-2" name="txtvalor_servico" id="txtvalor_servico" placeholder="Valor Serviço" required>
+                  <input type="text" class="form-control mr-2" name="txtvalor_servico" id="txtvalor_servico" placeholder="0,00" onkeypress="$(this).mask('#.##0,00', {reverse: true})" required>
                 </div>
 
                 <div class="form-group">
@@ -209,7 +215,7 @@ if (@$_GET['func'] == 'edita') {
 
                 <div class="form-group">
                   <label for="quantidade">Valor Peças</label>
-                  <input type="text" class="form-control mr-2" name="txtvalor_pecas" id="txtvalor_pecas" placeholder="Valor Peças" required>
+                  <input type="text" class="form-control mr-2" name="txtvalor_pecas" id="txtvalor_pecas" placeholder="0,00" onkeypress="$(this).mask('#.##0,00', {reverse: true})" required>
                 </div>
 
                  <div class="form-group">
