@@ -44,6 +44,7 @@ if ($row > 0) {
 	$dados = mysqli_fetch_assoc($result);
 	// adiciona na sessão
 	$_SESSION['usuario'] = $usuario;
+	$_SESSION['id_funcionario'] = $dados['id_funcionario'];
 	$_SESSION['nome_usuario'] = $dados['nome'];
 	$_SESSION['cargo_usuario'] = $dados['cargo'];
 

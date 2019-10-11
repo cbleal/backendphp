@@ -1,8 +1,52 @@
 <?php 
 
-/* Mostra o nome do usuário logado. */
-
+require 'conexao.php';
 require 'verificar_login.php';
+
+$id_funcionario = $_SESSION['id_funcionario'];
+
+// CONSULTA AO BANCO ORCAMENTOS (TOTAL REGISTROS STATUS = ABERTO)
+$query = "SELECT COUNT(*) AS qtd 
+          FROM orcamentos 
+          WHERE status = 'Aberto'
+          AND tecnico = '{$id_funcionario}' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$qtd_or = $row['qtd'];
+
+// CONSULTA AO BANCO OS (TOTAL REGISTROS STATUS = ABERTA)
+$query = "SELECT COUNT(*) AS qtd 
+          FROM os 
+          WHERE status = 'Aberta'
+          AND tecnico = '{$id_funcionario}' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$qtd_os = $row['qtd'];
+
+// CONSULTA AO BANCO ORCAMENTOS (TOTAL REGISTROS STATUS = AGUARDANDO)
+$query = "SELECT COUNT(*) AS qtd 
+          FROM orcamentos 
+          WHERE status = 'Aguardando'
+          AND tecnico = '{$id_funcionario}' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$qtd_ag = $row['qtd'];
+
+// CONSULTA AO BANCO OS (TOTAL REGISTROS POR MÊS E POR FUNCIONÁRIO)
+$ano = date('Y');
+$mes = date('m');
+$dataIni = $ano.'-'.$mes.'-01';
+$dataFim = $ano.'-'.$mes.'-31';
+$query = "SELECT COUNT(*) AS qtd 
+          FROM os 
+          WHERE status = 'Fechada'
+          AND data_fechamento
+          BETWEEN '{$dataIni}'
+          AND '{$dataFim}'
+          AND tecnico = '{$id_funcionario}' ";
+$result = mysqli_query($conexao, $query);
+$row    = mysqli_fetch_assoc($result);
+$qtd_me = $row['qtd'];
 
 ?>
 
@@ -168,14 +212,15 @@ require 'verificar_login.php';
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-globe text-warning"></i>
+                      <i class="nc-icon nc-single-copy-04 text-warning"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Capacity</p>
-                      <p class="card-title">150GB
-                        <p>
+                      <p class="card-category">Orcamentos</p>
+                      <p class="card-title">
+                        <?php echo $qtd_or; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -183,7 +228,8 @@ require 'verificar_login.php';
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Update Now
+                  <i class="fa fa-refresh"></i> 
+                  Orcamentos Abertos 
                 </div>
               </div>
             </div>
@@ -194,14 +240,15 @@ require 'verificar_login.php';
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-money-coins text-success"></i>
+                      <i class="nc-icon nc-vector text-success"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Revenue</p>
-                      <p class="card-title">$ 1,345
-                        <p>
+                      <p class="card-category">OS</p>
+                      <p class="card-title">
+                        <?php echo $qtd_os; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -209,7 +256,7 @@ require 'verificar_login.php';
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-calendar-o"></i> Last day
+                  <i class="fa fa-calendar-o"></i> OS Abertas
                 </div>
               </div>
             </div>
@@ -220,14 +267,15 @@ require 'verificar_login.php';
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-vector text-danger"></i>
+                      <i class="nc-icon nc-email-85 text-danger"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Errors</p>
-                      <p class="card-title">23
-                        <p>
+                      <p class="card-category">Aprovacao</p>
+                      <p class="card-title">
+                        <?php echo $qtd_ag; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -235,25 +283,27 @@ require 'verificar_login.php';
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-clock-o"></i> In the last hour
+                  <i class="fa fa-clock-o"></i> 
+                  Orcam. Aguardando
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6">
+         <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats">
               <div class="card-body ">
                 <div class="row">
                   <div class="col-5 col-md-4">
                     <div class="icon-big text-center icon-warning">
-                      <i class="nc-icon nc-favourite-28 text-primary"></i>
+                      <i class="nc-icon nc-check-2 text-primary"></i>
                     </div>
                   </div>
                   <div class="col-7 col-md-8">
                     <div class="numbers">
-                      <p class="card-category">Followers</p>
-                      <p class="card-title">+45K
-                        <p>
+                      <p class="card-category">OS Fechadas</p>
+                      <p class="card-title">
+                        <?php echo $qtd_me; ?>
+                      <p>
                     </div>
                   </div>
                 </div>
@@ -261,14 +311,86 @@ require 'verificar_login.php';
               <div class="card-footer ">
                 <hr>
                 <div class="stats">
-                  <i class="fa fa-refresh"></i> Update now
+                  <i class="fa fa-refresh"></i> Ordens Servico do Mes
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
 
+      <!-- LINHA -->
+      <div class="row">
+        <!-- COLUNA (col-md-6 = 50%) - dispositivos médios - largura da tela igual ou superior a 768 px -->
+        <div class="col-md-6">
+          <!-- MARGEM TOP = 5 -->
+          <p class="mt-5">ORÇAMENTOS ABERTOS</p>
+        </div>
+        <!-- COLUNA (col-md-6 = 50%) - dispositivos médios - largura da tela igual ou superior a 768 px -->
+        <div class="col-md-6">
+          <!-- MARGEM TOP = 5 -->
+          <p class="mt-5">OS ABERTAS</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Div Row Cards -->
+      <div class="row">
+
+      <!-- VERIFICAR ORÇAMENTOS ABERTOS -->
+      <?php 
+
+        $query  = "SELECT o.id, o.problema, o.data_abertura, f.nome FROM orcamentos AS o INNER JOIN funcionarios AS f ON f.id = o.tecnico WHERE o.status = 'Aberto' AND tecnico = '{$id_funcionario}' ";
+        $result = mysqli_query($conexao, $query);
+        
+        while ($row = mysqli_fetch_assoc($result)) {
+
+          ?>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+              <div class="card-header" style="font-size: 16px">
+                <?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?>                  
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><?php echo $row['nome']; ?></h5>
+                <p class="card-text"><?php echo $row['problema']; ?></p>
+              </div>
+            </div>
+          </div>
+
+        <?php 
+          }
+        ?>
+      
+      <!-- VERIFICAR OS ABERTAS -->
+      <?php 
+
+        $query  = "SELECT ord.id, ord.produto, ord.data_abertura, f.nome FROM os AS ord INNER JOIN funcionarios AS f ON f.id = ord.tecnico WHERE ord.status = 'Aberta' AND tecnico = '{$id_funcionario}'";
+        $result = mysqli_query($conexao, $query);
+        
+        while ($row = mysqli_fetch_assoc($result)) {
+
+          ?>
+
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+              <div class="card-header" style="font-size: 16px">
+                <?php echo fmtData($row['data_abertura']); ?>                  
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><?php echo $row['nome']; ?></h5>
+                <p class="card-text"><?php echo $row['produto']; ?></p>
+              </div>
+            </div>
+          </div>
+
+        <?php 
+          }
+        ?>
+
+      </div>
+      <!-- Fim Div Row Cards -->
 
       <footer class="footer footer-black  footer-white ">
         <div class="container-fluid">

@@ -133,7 +133,8 @@ $tecnico = $_SESSION['nome_usuario'];
                             <td><?php echo $row['cli_nome']; ?></td>
                             <td><?php echo $row['produto']; ?></td>
                             <td><?php echo number_format($row['valor_total'], 2, ',', '.'); ?></td>
-                            <td><?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?></td>         
+                            <td><?php echo fmtData( $row['data_abertura'] ); ?></td>
+                            <!--<td><?php echo date('d/m/Y', strtotime($row['data_abertura'])); ?></td>-->     
                             <td>
                               <a class="btn btn-info" href="os_abertas.php?func=edita&id=<?php echo $row['id'] ?>&valor=<?php echo $row['valor_total'] ?>" onclick="return confirm('Confirma o fechamento da O.S ?')">
                                 <i class="fas fa-check-circle"></i>

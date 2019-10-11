@@ -1,7 +1,6 @@
 <?php 
 
 require 'conexao.php';
-
 require 'verificar_login.php';
 
 // verificação de cargo logado
